@@ -38,7 +38,7 @@ func main() {
 	path, _ := os.Getwd()
 	fp := filepath.Join(path, "web", "build")
 	fs := http.FileServer(http.Dir(fp))
-	rt.PathPrefix("/").Handler(fs)
+	rt.Handle("/", fs)
 
 	log.Println("Server is running")
 
