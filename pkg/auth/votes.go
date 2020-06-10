@@ -18,7 +18,7 @@ func VotesByUser(userID string, r *http.Request) (*[]string, error) {
 	}
 
 	// Post to endpoint
-	url := fmt.Sprint(r.Host, apiURL)
+	url := fmt.Sprint(r.URL.Scheme, r.URL.Host, apiURL)
 	res, err := http.Post(url, "application/json", bytes.NewBuffer(js))
 	if err != nil {
 		return nil, err

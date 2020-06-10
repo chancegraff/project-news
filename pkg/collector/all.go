@@ -45,7 +45,7 @@ func all(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Post to endpoint
-	url := fmt.Sprint(r.Host, apiURL)
+	url := fmt.Sprint(r.URL.Scheme, r.URL.Host, apiURL)
 	res, err := http.Post(url, "application/json", bytes.NewBuffer(js))
 	if err != nil {
 		logger.Error(err, http.StatusInternalServerError)
