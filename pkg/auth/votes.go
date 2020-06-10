@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -21,18 +21,18 @@ func VotesByUser(userID string, r *http.Request) (*[]string, error) {
 	// Post to endpoint
 	requestURL, _ := url.Parse(r.RequestURI)
 	address := fmt.Sprint(requestURL.Scheme, requestURL.Host, apiURL)
-	fmt.Sprintln("Address is", address)
-	res, err := http.Post(address, "application/json", bytes.NewBuffer(js))
-	if err != nil {
-		return nil, err
-	}
+	return nil, errors.New(address)
+	// res, err := http.Post(address, "application/json", bytes.NewBuffer(js))
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	// Decode into array of IDs
-	var arts []string
-	err = json.NewDecoder(res.Body).Decode(&arts)
-	if err != nil {
-		return nil, err
-	}
+	// // Decode into array of IDs
+	// var arts []string
+	// err = json.NewDecoder(res.Body).Decode(&arts)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	return &arts, nil
+	// return &arts, nil
 }

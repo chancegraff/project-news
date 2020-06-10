@@ -48,7 +48,7 @@ func all(w http.ResponseWriter, r *http.Request) {
 	// Post to endpoint
 	requestURL, _ := url.Parse(r.RequestURI)
 	address := fmt.Sprint(requestURL.Scheme, requestURL.Host, apiURL)
-	fmt.Sprintln("Address is", address)
+	logger.Info("Address is", address)
 	res, err := http.Post(address, "application/json", bytes.NewBuffer(js))
 	if err != nil {
 		logger.Error(err, http.StatusInternalServerError)

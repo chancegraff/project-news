@@ -32,6 +32,11 @@ func (l *HTTPLogger) Okay(v interface{}) {
 	l.je.Encode(v)
 }
 
+// Info records info
+func (l *HTTPLogger) Info(v ...interface{}) {
+	log.Printf("%s::Info, %s\r\n", l.name, v)
+}
+
 // Error records malfunctions
 func (l *HTTPLogger) Error(err error, status int) {
 	log.Printf("%s::Error:::%s, %s\r\n", l.name, fmt.Sprint(status), err)
