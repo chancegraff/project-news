@@ -65,7 +65,7 @@ func main() {
 				handlers.AllowedOrigins(
 					[]string{"http://localhost:3000"},
 				),
-			)(api),
+			)(rt),
 		),
 	)
 }
