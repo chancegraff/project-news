@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-var apiURL = "http://localhost:8001/api/v1/ranks/user"
+var apiURL = "/api/v1/ranks/user"
 
 // VotesByUser takes a user ID and returns an array of article IDs associated with it
 func VotesByUser(userID string) (*[]string, error) {

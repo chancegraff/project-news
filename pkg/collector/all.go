@@ -12,7 +12,7 @@ import (
 	"github.com/chancegraff/project-news/pkg/models"
 )
 
-var apiURL = "http://localhost:8001/api/v1/ranks/articles"
+var apiURL = "/api/v1/ranks/articles"
 
 type rank struct {
 	ArticleID string
