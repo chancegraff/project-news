@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"time"
 
@@ -14,32 +17,16 @@ import (
 	"github.com/chancegraff/project-news/pkg/collector"
 	"github.com/chancegraff/project-news/pkg/ranker"
 	"github.com/chancegraff/project-news/pkg/token"
-	"github.com/jinzhu/gorm"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
-func getArticles(store *gorm.DB) {
-	for {
-		db.FillArticles(store, vendors.Get())
-		log.Println("Server got articles")
-		time.Sleep(5 * time.Minute)
-	}
-}
-
 func main() {
-	port := ":" + utils.GetEnv("PORT", "3000")
-	path, _ := os.Getwd()
-	fp := filepath.Join(path, "web", "build")
-
 	store := db.Init()
 	defer store.Close()
 
-	fs := http.FileServer(http.Dir(fp))
 	rt := mux.NewRouter()
-
-	rt.PathPrefix("/").Handler(fs)
 
 	api := rt.PathPrefix("/api/v1").Subrouter()
 
@@ -48,24 +35,54 @@ func main() {
 	api = ranker.Listen(api, store)
 	api = token.Listen(api, store)
 
-	go getArticles(store)
+	path, _ := os.Getwd()
+	fp := filepath.Join(path, "web", "build")
+	fs := http.FileServer(http.Dir(fp))
+	rt.PathPrefix("/").Handler(fs)
 
 	log.Println("Server is running")
 
-	log.Fatal(
-		http.ListenAndServe(
-			port,
-			handlers.CORS(
-				handlers.AllowedHeaders(
-					[]string{"X-Requested-With", "X-Token-Auth", "Content-Type", "Authorization"},
-				),
-				handlers.AllowedMethods(
-					[]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"},
-				),
-				handlers.AllowedOrigins(
-					[]string{"http://localhost:3000"},
-				),
-			)(rt),
+	port := fmt.Sprintf(":%s", utils.GetEnv("PORT", "3000"))
+
+	cors := handlers.CORS(
+		handlers.AllowedHeaders(
+			[]string{"X-Requested-With", "X-Token-Auth", "Content-Type", "Authorization"},
+		),
+		handlers.AllowedMethods(
+			[]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"},
 		),
 	)
+
+	var wait time.Duration
+	ctx, cancel := context.WithTimeout(context.Background(), wait)
+	defer cancel()
+
+	srv := &http.Server{
+		Handler:      cors(rt),
+		Addr:         port,
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+	defer srv.Shutdown(ctx)
+
+	go func() {
+		for {
+			db.FillArticles(store, vendors.Get())
+			log.Println("Server got articles")
+			time.Sleep(5 * time.Minute)
+		}
+	}()
+
+	go func() {
+		if err := srv.ListenAndServe(); err != nil {
+			log.Println(err)
+		}
+	}()
+
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, os.Interrupt)
+	<-ch
+
+	os.Exit(0)
 }
