@@ -12,7 +12,7 @@ import (
 	"github.com/chancegraff/project-news/pkg/models"
 )
 
-var apiURL = "/api/v1/ranks/articles"
+var apiURL = "api/v1/ranks/articles"
 
 type rank struct {
 	ArticleID string
@@ -45,7 +45,8 @@ func all(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Post to endpoint
-	res, err := http.Post(apiURL, "application/json", bytes.NewBuffer(js))
+	url := fmt.Sprint(r.Host, apiURL)
+	res, err := http.Post(url, "application/json", bytes.NewBuffer(js))
 	if err != nil {
 		logger.Error(err, http.StatusInternalServerError)
 		return

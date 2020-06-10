@@ -3,13 +3,14 @@ package auth
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
 var apiURL = "/api/v1/ranks/user"
 
 // VotesByUser takes a user ID and returns an array of article IDs associated with it
-func VotesByUser(userID string) (*[]string, error) {
+func VotesByUser(userID string, r *http.Request) (*[]string, error) {
 	// Marshal user ID into JSON
 	js, err := json.Marshal(map[string]string{"user": userID})
 	if err != nil {
@@ -17,7 +18,8 @@ func VotesByUser(userID string) (*[]string, error) {
 	}
 
 	// Post to endpoint
-	res, err := http.Post(apiURL, "application/json", bytes.NewBuffer(js))
+	url := fmt.Sprint(r.Host, apiURL)
+	res, err := http.Post(url, "application/json", bytes.NewBuffer(js))
 	if err != nil {
 		return nil, err
 	}

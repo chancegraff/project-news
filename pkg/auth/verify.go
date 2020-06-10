@@ -34,7 +34,7 @@ func verify(wt http.ResponseWriter, rq *http.Request) {
 	}
 
 	// Get array of article IDs by user ID
-	vts, err := VotesByUser(fmt.Sprint(usr.ID))
+	vts, err := VotesByUser(fmt.Sprint(usr.ID), rq)
 	if err != nil {
 		logger.Error(err, http.StatusInternalServerError)
 		return
