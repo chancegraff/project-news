@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/chancegraff/goutils/loggers"
+	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/models"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func verify(wt http.ResponseWriter, rq *http.Request) {
-	logger := loggers.NewHTTPLogger("Verify", &wt)
+	logger := utils.NewHTTPLogger("Verify", &wt)
 
 	var cred models.Credentials
 	err := json.NewDecoder(rq.Body).Decode(&cred)

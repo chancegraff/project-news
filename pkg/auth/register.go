@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/chancegraff/goutils/loggers"
+	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/models"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func register(wt http.ResponseWriter, rq *http.Request) {
-	logger := loggers.NewHTTPLogger("Register", &wt)
+	logger := utils.NewHTTPLogger("Register", &wt)
 
 	// Decode body credentials
 	var cred models.Credentials

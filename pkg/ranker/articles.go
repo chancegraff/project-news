@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/chancegraff/goutils/loggers"
+	"github.com/chancegraff/project-news/internal/utils"
 )
 
 // Vote ...
@@ -16,7 +16,7 @@ type Vote struct {
 
 // articles takes an array of article IDs and returns the count of Votes associated with each
 func articles(wt http.ResponseWriter, rq *http.Request) {
-	logger := loggers.NewHTTPLogger("Articles", &wt)
+	logger := utils.NewHTTPLogger("Articles", &wt)
 
 	var artIDs []string
 	err := json.NewDecoder(rq.Body).Decode(&artIDs)

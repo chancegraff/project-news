@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/chancegraff/goutils/loggers"
+	"github.com/chancegraff/project-news/internal/utils"
 )
 
 type userPayload struct {
@@ -13,7 +13,7 @@ type userPayload struct {
 }
 
 func user(wt http.ResponseWriter, rq *http.Request) {
-	logger := loggers.NewHTTPLogger("Verify", &wt)
+	logger := utils.NewHTTPLogger("Verify", &wt)
 
 	// Decode payload
 	var pld userPayload

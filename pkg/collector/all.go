@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/chancegraff/goutils/loggers"
+	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/models"
 )
 
@@ -20,7 +20,7 @@ type rank struct {
 }
 
 func all(w http.ResponseWriter, r *http.Request) {
-	logger := loggers.NewHTTPLogger("All", &w)
+	logger := utils.NewHTTPLogger("All", &w)
 
 	offset := r.FormValue("offset")
 	if offset == "" {

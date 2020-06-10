@@ -3,13 +3,13 @@ package collector
 import (
 	"net/http"
 
-	"github.com/chancegraff/goutils/loggers"
+	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/models"
 	"github.com/gorilla/mux"
 )
 
 func get(w http.ResponseWriter, r *http.Request) {
-	logger := loggers.NewHTTPLogger("Get", &w)
+	logger := utils.NewHTTPLogger("Get", &w)
 
 	articleID := mux.Vars(r)["id"]
 

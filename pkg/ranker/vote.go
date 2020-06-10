@@ -4,14 +4,14 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/chancegraff/goutils/loggers"
+	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/models"
 	"github.com/jinzhu/gorm"
 )
 
 // vote takes an article ID and a user ID and returns a success code
 func vote(wt http.ResponseWriter, rq *http.Request) {
-	logger := loggers.NewHTTPLogger("Vote", &wt)
+	logger := utils.NewHTTPLogger("Vote", &wt)
 
 	// Decode body into model
 	var vt, tmp models.Vote

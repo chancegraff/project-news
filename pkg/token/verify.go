@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/chancegraff/goutils/decoders"
-	"github.com/chancegraff/goutils/loggers"
 	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/models"
 )
@@ -18,11 +16,11 @@ type verifyPayload struct {
 }
 
 func verify(wt http.ResponseWriter, rq *http.Request) {
-	logger := loggers.NewHTTPLogger("Generate", &wt)
+	logger := utils.NewHTTPLogger("Generate", &wt)
 
 	// Decode body
 	payload := verifyPayload{}
-	err := decoders.RequestBody(&payload, rq)
+	err := utils.RequestBodyDecoder(&payload, rq)
 	if err != nil {
 		logger.Error(err, http.StatusBadRequest)
 		return

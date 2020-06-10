@@ -1,5 +1,3 @@
-github.com/chancegraff/goutils v0.0.0-20200504201712-551553e69c80 h1:pKyZj8dihwCkSz1rXE3K0QpmsQLD9MYMNObHC57ZoPA=
-github.com/chancegraff/goutils v0.0.0-20200504201712-551553e69c80/go.mod h1:Reh8eeH0nn2Qti3VcZanbPS8WjVrF1jb+5azm4tHY7g=
 github.com/denisenkom/go-mssqldb v0.0.0-20191124224453-732737034ffd/go.mod h1:xbL0rPBG9cCiLr28tMa8zpbdarY27NDyej4t/EjAShU=
 github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5/go.mod h1:a2zkGnVExMxdzMo3M0Hi/3sEU+cWnZpSni0O6/Yb/P0=
 github.com/go-sql-driver/mysql v1.4.1/go.mod h1:zAC/RDZ24gD3HViQzih4MyKcchzm+sOG5ZlKdlhCg5w=

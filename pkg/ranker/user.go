@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/chancegraff/goutils/loggers"
+	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/models"
 )
 
@@ -14,7 +14,7 @@ type payload struct {
 
 // user takes a user ID and returns an array of article IDs associated with it
 func user(wt http.ResponseWriter, rq *http.Request) {
-	logger := loggers.NewHTTPLogger("User", &wt)
+	logger := utils.NewHTTPLogger("User", &wt)
 
 	var pd payload
 	err := json.NewDecoder(rq.Body).Decode(&pd)

@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/chancegraff/goutils/decoders"
-	"github.com/chancegraff/goutils/loggers"
 	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/models"
 	"github.com/google/uuid"
@@ -16,11 +14,11 @@ import (
 // TODO Fix creating new tokens for existing identifiers
 
 func generate(wt http.ResponseWriter, rq *http.Request) {
-	logger := loggers.NewHTTPLogger("Generate", &wt)
+	logger := utils.NewHTTPLogger("Generate", &wt)
 
 	// Decode body
 	identifiers := models.Identifiers{}
-	err := decoders.RequestBody(&identifiers, rq)
+	err := utils.RequestBodyDecoder(&identifiers, rq)
 	if err != nil {
 		logger.Error(err, http.StatusBadRequest)
 		return

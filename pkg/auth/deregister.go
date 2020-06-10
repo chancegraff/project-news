@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/chancegraff/goutils/loggers"
+	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/models"
 	"github.com/jinzhu/gorm"
 )
@@ -14,7 +14,7 @@ type deregisterPayload struct {
 }
 
 func deregister(wt http.ResponseWriter, rq *http.Request) {
-	logger := loggers.NewHTTPLogger("Deregister", &wt)
+	logger := utils.NewHTTPLogger("Deregister", &wt)
 
 	// Decode payload
 	var pld deregisterPayload
