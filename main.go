@@ -43,10 +43,10 @@ func main() {
 
 	api := rt.PathPrefix("/api/v1").Subrouter()
 
-	auth.Listen(api, store)
-	collector.Listen(api, store)
-	ranker.Listen(api, store)
-	token.Listen(api, store)
+	api = auth.Listen(api, store)
+	api = collector.Listen(api, store)
+	api = ranker.Listen(api, store)
+	api = token.Listen(api, store)
 
 	go getArticles(store)
 
@@ -65,7 +65,7 @@ func main() {
 				handlers.AllowedOrigins(
 					[]string{"http://localhost:3000"},
 				),
-			)(rt),
+			)(api),
 		),
 	)
 }

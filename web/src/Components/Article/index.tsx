@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import Upvoter from "../Upvoter";
 import styles from './index.module.scss';
 
-const voteURL = "http://localhost:8001/api/v1/ranks/vote"
+const voteURL = "/api/v1/ranks/vote"
 
 const Article: React.FC<{
   article: IArticle;

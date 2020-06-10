@@ -4,9 +4,9 @@ import RegisterForm from './RegisterForm';
 import LoginForm from './LoginForm';
 import styles from './index.module.scss';
 
-const registerURL = "http://localhost:8002/api/v1/auth/register"
-const verifyURL = "http://localhost:8002/api/v1/auth/verify"
-const deregisterURL = "http://localhost:8002/api/v1/auth/deregister"
+const registerURL = "/api/v1/auth/register"
+const verifyURL = "/api/v1/auth/verify"
+const deregisterURL = "/api/v1/auth/deregister"
 
 const Account: React.FC<{
   user: IUser | undefined;
