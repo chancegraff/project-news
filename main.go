@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"path/filepath"
 	"time"
 
 	"github.com/chancegraff/project-news/internal/db"
@@ -22,7 +21,18 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var getCORS = handlers.CORS(
+	handlers.AllowedHeaders(
+		[]string{"X-Requested-With", "X-Token-Auth", "Content-Type", "Authorization"},
+	),
+	handlers.AllowedMethods(
+		[]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"},
+	),
+)
+
 func main() {
+	log.Println("Server is starting")
+
 	store := db.Init()
 	defer store.Close()
 
@@ -35,30 +45,18 @@ func main() {
 	api = ranker.Listen(api, store)
 	api = token.Listen(api, store)
 
-	path, _ := os.Getwd()
-	fp := filepath.Join(path, "web", "build")
-	fs := http.FileServer(http.Dir(fp))
-	rt.Handle("/", fs)
-
-	log.Println("Server is running")
-
-	port := fmt.Sprintf(":%s", utils.GetEnv("PORT", "3000"))
-
-	cors := handlers.CORS(
-		handlers.AllowedHeaders(
-			[]string{"X-Requested-With", "X-Token-Auth", "Content-Type", "Authorization"},
-		),
-		handlers.AllowedMethods(
-			[]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"},
-		),
-	)
+	// path, _ := os.Getwd()
+	// fp := filepath.Join(path, "web", "build")
+	// fs := http.FileServer(http.Dir(fp))
+	// rt.PathPrefix("/").Handler(fs)
 
 	var wait time.Duration
 	ctx, cancel := context.WithTimeout(context.Background(), wait)
 	defer cancel()
 
+	port := fmt.Sprintf(":%s", utils.GetEnv("PORT", "3000"))
 	srv := &http.Server{
-		Handler:      cors(rt),
+		Handler:      getCORS(rt),
 		Addr:         port,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
@@ -80,9 +78,13 @@ func main() {
 		}
 	}()
 
+	log.Println("Server is running")
+
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, os.Interrupt)
 	<-ch
+
+	log.Println("Server is closing")
 
 	os.Exit(0)
 }
