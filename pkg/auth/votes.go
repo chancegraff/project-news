@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 var apiURL = "/api/v1/ranks/user"
@@ -18,7 +19,8 @@ func VotesByUser(userID string, r *http.Request) (*[]string, error) {
 	}
 
 	// Post to endpoint
-	url := fmt.Sprint(r.URL.Scheme, r.URL.Host, apiURL)
+	u, _ := url.Parse(r.RequestURI)
+	url := fmt.Sprint(u.Scheme, u.Host, apiURL)
 	res, err := http.Post(url, "application/json", bytes.NewBuffer(js))
 	if err != nil {
 		return nil, err

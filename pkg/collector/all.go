@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"sort"
 	"strconv"
 
@@ -45,7 +46,8 @@ func all(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Post to endpoint
-	url := fmt.Sprint(r.URL.Scheme, r.URL.Host, apiURL)
+	u, _ := url.Parse(r.RequestURI)
+	url := fmt.Sprint(u.Scheme, u.Host, apiURL)
 	res, err := http.Post(url, "application/json", bytes.NewBuffer(js))
 	if err != nil {
 		logger.Error(err, http.StatusInternalServerError)
