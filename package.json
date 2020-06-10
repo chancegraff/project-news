@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "start": "npm install --prefix web && npm build --prefix web"
+    "start": "npm install --prefix web && npm run build --prefix web"
   }
 }
