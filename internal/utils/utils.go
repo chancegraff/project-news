@@ -9,6 +9,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"net/http"
+	"os"
 	"reflect"
 )
 
@@ -99,4 +100,12 @@ func HMACSHA256(data []byte, secret string) string {
 	hm := hmac.New(sha256.New, []byte(secret))
 	hm.Write(data)
 	return hex.EncodeToString(hm.Sum(nil))
+}
+
+// GetEnv ...
+func GetEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
 }

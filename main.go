@@ -10,6 +10,7 @@ import (
 	"github.com/chancegraff/project-news/cmd/main/collector"
 	"github.com/chancegraff/project-news/cmd/main/ranker"
 	"github.com/chancegraff/project-news/cmd/main/token"
+	"github.com/chancegraff/project-news/internal/utils"
 )
 
 func main() {
@@ -18,13 +19,14 @@ func main() {
 	go ranker.StartServer()
 	go token.StartServer()
 
+	port := utils.GetEnv("PORT", "3000")
 	path, _ := os.Getwd()
 	fp := filepath.Join(path, "web", "build")
 	fs := http.FileServer(http.Dir(fp))
 
 	http.Handle("/", fs)
 
-	err := http.ListenAndServe(":3000", nil)
+	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
