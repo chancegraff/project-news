@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"time"
 
 	"github.com/chancegraff/project-news/internal/db"
@@ -38,17 +39,15 @@ func main() {
 
 	rt := mux.NewRouter()
 
-	api := rt.PathPrefix("/api/v1").Subrouter()
+	auth.Listen(rt, store)
+	collector.Listen(rt, store)
+	ranker.Listen(rt, store)
+	token.Listen(rt, store)
 
-	api = auth.Listen(api, store)
-	api = collector.Listen(api, store)
-	api = ranker.Listen(api, store)
-	api = token.Listen(api, store)
-
-	// path, _ := os.Getwd()
-	// fp := filepath.Join(path, "web", "build")
-	// fs := http.FileServer(http.Dir(fp))
-	// rt.PathPrefix("/").Handler(fs)
+	path, _ := os.Getwd()
+	fp := filepath.Join(path, "web", "build")
+	fs := http.FileServer(http.Dir(fp))
+	rt.PathPrefix("/").Handler(fs)
 
 	var wait time.Duration
 	ctx, cancel := context.WithTimeout(context.Background(), wait)

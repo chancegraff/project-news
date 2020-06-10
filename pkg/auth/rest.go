@@ -10,7 +10,7 @@ var store *gorm.DB
 // Listen ...
 func Listen(api *mux.Router, s *gorm.DB) *mux.Router {
 	store = s
-	route := api.PathPrefix("/auth").Subrouter()
+	route := api.PathPrefix("/api/v1/auth").Subrouter()
 
 	route.HandleFunc("/deregister", deregister).Methods("POST", "OPTIONS")
 	route.HandleFunc("/register", register).Methods("POST", "OPTIONS")
