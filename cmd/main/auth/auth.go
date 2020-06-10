@@ -1,20 +1,20 @@
-package main
+package auth
 
 import (
 	"log"
 
 	"github.com/chancegraff/project-news/internal/db"
-	"github.com/chancegraff/project-news/pkg/auth"
+	rest "github.com/chancegraff/project-news/pkg/auth"
 	"github.com/jinzhu/gorm"
 )
 
 var store *gorm.DB
 
-func AuthServer() {
+func StartServer() {
 	log.Println("Running")
 
 	store = db.Init()
 	defer store.Close()
 
-	auth.Listen(store)
+	rest.Listen(store)
 }

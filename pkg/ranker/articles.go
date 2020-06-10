@@ -1,4 +1,4 @@
-package rest
+package ranker
 
 import (
 	"encoding/json"
