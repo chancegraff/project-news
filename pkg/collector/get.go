@@ -1,24 +1,26 @@
 package collector
 
 import (
-	"net/http"
+	"encoding/json"
 
-	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/models"
-	"github.com/gorilla/mux"
 )
 
-func get(w http.ResponseWriter, r *http.Request) {
-	logger := utils.NewHTTPLogger("Get", &w)
+type bodyGet struct {
+	ID string
+}
 
-	articleID := mux.Vars(r)["id"]
+func get(data interface{}) ([]byte, error) {
+	// Typecast into body
+	bd := data.(bodyGet)
 
+	// Get article
 	var article models.Article
-	err := store.First(&article, articleID).Error
+	err := store.First(&article, bd.ID).Error
 	if err != nil {
-		logger.Error(err, http.StatusBadRequest)
-		return
+		return nil, err
 	}
 
-	logger.Okay(article)
+	// Return data
+	return json.Marshal(article)
 }

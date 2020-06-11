@@ -1,35 +1,31 @@
 package collector
 
 import (
+	"encoding/json"
 	"fmt"
-	"net/http"
 	"sort"
 	"strconv"
 	"time"
 
-	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/models"
 )
 
-var apiURL = "/api/v1/ranks/articles"
-
-// Vote ...
-type Vote struct {
+type vote struct {
 	ArticleID string
 	Count     string
 }
 
-func all(w http.ResponseWriter, r *http.Request) {
-	logger := utils.NewHTTPLogger("All", &w)
+type bodyAll struct {
+	Offset string
+}
 
-	offset := r.FormValue("offset")
-	if offset == "" {
-		offset = "0"
-	}
+func all(data interface{}) ([]byte, error) {
+	// Typecast into body
+	bd := data.(bodyAll)
 
 	// Get articles
 	var articles []models.Article
-	store.Offset(offset).Limit(20).Order("published_at desc").Find(&articles)
+	store.Offset(bd.Offset).Limit(20).Order("published_at desc").Find(&articles)
 
 	// Pick article IDs
 	var articleIDs []string
@@ -38,11 +34,10 @@ func all(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get ranks for picked IDs
-	var ranks []Vote
+	var ranks []vote
 	err := store.Select("article_id,count(*) as count").Where("article_id IN (?)", articleIDs).Where("created_at > ?", time.Now().AddDate(0, 0, -1)).Group("article_id").Find(&ranks).Error
 	if err != nil {
-		logger.Error(err, http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
 	// Sort array
@@ -50,11 +45,11 @@ func all(w http.ResponseWriter, r *http.Request) {
 		iRank, jRank := "0", "0"
 		iArticle, jArticle := articles[i], articles[j]
 
-		for _, r := range ranks {
-			if r.ArticleID == fmt.Sprint(iArticle.ID) {
-				iRank = r.Count
-			} else if r.ArticleID == fmt.Sprint(jArticle.ID) {
-				jRank = r.Count
+		for _, rank := range ranks {
+			if rank.ArticleID == fmt.Sprint(iArticle.ID) {
+				iRank = rank.Count
+			} else if rank.ArticleID == fmt.Sprint(jArticle.ID) {
+				jRank = rank.Count
 			}
 		}
 
@@ -64,6 +59,5 @@ func all(w http.ResponseWriter, r *http.Request) {
 		return iRankInt > jRankInt
 	})
 
-	// Return response
-	logger.Okay(articles)
+	return json.Marshal(articles)
 }

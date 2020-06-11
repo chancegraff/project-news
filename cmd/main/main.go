@@ -12,7 +12,6 @@ import (
 
 	"github.com/chancegraff/project-news/internal/db"
 	"github.com/chancegraff/project-news/internal/utils"
-	"github.com/chancegraff/project-news/internal/vendors"
 	"github.com/chancegraff/project-news/pkg/auth"
 	"github.com/chancegraff/project-news/pkg/collector"
 	"github.com/chancegraff/project-news/pkg/ranker"
@@ -20,7 +19,7 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	_ "github.com/joho/godotenv/autoload"
+	_ "github.com/joho/godotenv/autoload" // Autoloading .env
 )
 
 var getCORS = handlers.CORS(
@@ -63,14 +62,6 @@ func main() {
 		IdleTimeout:  60 * time.Second,
 	}
 	defer srv.Shutdown(ctx)
-
-	go func() {
-		for {
-			db.FillArticles(store, vendors.Get())
-			log.Println("Server got articles")
-			time.Sleep(5 * time.Minute)
-		}
-	}()
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil {
