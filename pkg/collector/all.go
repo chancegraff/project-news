@@ -1,13 +1,11 @@
 package collector
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"sort"
 	"strconv"
+	"time"
 
 	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/models"
@@ -15,7 +13,8 @@ import (
 
 var apiURL = "/api/v1/ranks/articles"
 
-type rank struct {
+// Vote ...
+type Vote struct {
 	ArticleID string
 	Count     string
 }
@@ -38,26 +37,9 @@ func all(w http.ResponseWriter, r *http.Request) {
 		articleIDs = append(articleIDs, fmt.Sprint(art.ID))
 	}
 
-	// Marshal IDs into JSON
-	js, err := json.Marshal(articleIDs)
-	if err != nil {
-		logger.Error(err, http.StatusInternalServerError)
-		return
-	}
-
-	// Post to endpoint
-	requestURL, _ := url.Parse(r.RequestURI)
-	address := fmt.Sprint(requestURL.Scheme, requestURL.Host, apiURL)
-	logger.Info("Address is", address)
-	res, err := http.Post(address, "application/json", bytes.NewBuffer(js))
-	if err != nil {
-		logger.Error(err, http.StatusInternalServerError)
-		return
-	}
-
-	// Decode into array
-	var ranks []rank
-	err = json.NewDecoder(res.Body).Decode(&ranks)
+	// Get ranks for picked IDs
+	var ranks []Vote
+	err := store.Select("article_id,count(*) as count").Where("article_id IN (?)", articleIDs).Where("created_at > ?", time.Now().AddDate(0, 0, -1)).Group("article_id").Find(&ranks).Error
 	if err != nil {
 		logger.Error(err, http.StatusInternalServerError)
 		return

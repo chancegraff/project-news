@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/chancegraff/project-news/internal/utils"
+	"github.com/chancegraff/project-news/pkg/models"
 )
 
 type userPayload struct {
@@ -23,8 +24,9 @@ func user(wt http.ResponseWriter, rq *http.Request) {
 		return
 	}
 
-	// Get array of article IDs by user ID
-	vts, err := VotesByUser(fmt.Sprint(pld.UserID), rq)
+	// Get user votes
+	var vts []models.Vote
+	err = store.Select("article_id").Where("user_id = ?", fmt.Sprint(pld.UserID)).Find(&vts).Error
 	if err != nil {
 		logger.Error(err, http.StatusInternalServerError)
 		return
