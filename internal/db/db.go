@@ -1,6 +1,8 @@
 package db
 
 import (
+	"os"
+
 	"github.com/chancegraff/project-news/pkg/models"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres" // PostgreSQL adapter
@@ -8,7 +10,7 @@ import (
 
 // Init ...
 func Init() *gorm.DB {
-	db, err := gorm.Open("postgres", "host=localhost port=5432 dbname=news sslmode=disable")
+	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		panic(err)
 	}
