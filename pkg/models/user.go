@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite" // sqlite adapter
 )
 
@@ -13,7 +12,7 @@ type Credentials struct {
 
 // User ...
 type User struct {
-	gorm.Model
+	Base
 	Credentials
 }
 

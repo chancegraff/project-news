@@ -2,8 +2,6 @@ package models
 
 import (
 	"time"
-
-	"github.com/jinzhu/gorm"
 )
 
 // Article ...
@@ -12,7 +10,7 @@ type Article struct {
 	URL         string    `json:"URL"`
 	Thumbnail   string    `json:"Thumbnail"`
 	PublishedAt time.Time `json:"PublishedAt"`
-	gorm.Model
+	Base
 }
 
 // ArticleResponse ...

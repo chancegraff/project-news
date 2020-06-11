@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jinzhu/gorm"
 )
 
 // Client represents a unique individual
@@ -13,7 +12,7 @@ type Client struct {
 	UserID    string    `json:"user"`
 	Secret    uuid.UUID `json:"secret"`
 	ExpiredAt time.Time `json:"expiredAt"`
-	gorm.Model
+	Base
 }
 
 // Identifiers are used to construct a client hash
