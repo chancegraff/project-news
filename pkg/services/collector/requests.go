@@ -7,3 +7,9 @@ type allRequest struct {
 type getRequest struct {
 	ID int `json:"id"`
 }
+
+// Proxies
+
+type articlesRequest struct {
+	ArticleIDs []string `json:"articles"`
+}

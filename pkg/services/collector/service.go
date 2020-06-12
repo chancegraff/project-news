@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"sort"
 	"strconv"
-	"time"
 
 	"github.com/chancegraff/project-news/internal/db"
 	"github.com/chancegraff/project-news/internal/models"
+	"github.com/go-kit/kit/endpoint"
 )
 
 // Service implements the collector interface
@@ -17,18 +17,19 @@ type Service interface {
 }
 
 type service struct {
-	Articles *Articles
+	Manager  *Manager
+	articles endpoint.Endpoint
 }
 
 // Get will find and return a single article from the database that matches the ID
 func (s *service) Get(id int) (models.Article, error) {
-	return s.Articles.First(id)
+	return s.Manager.First(id)
 }
 
 // All will return articles from the database with their rank
 func (s *service) All(offset int) ([]models.Article, error) {
 	// Get articles
-	articles, err := s.Articles.List(offset, 20)
+	articles, err := s.Manager.List(offset, 20)
 	if err != nil {
 		return nil, err
 	}
@@ -39,33 +40,23 @@ func (s *service) All(offset int) ([]models.Article, error) {
 		articleIDs = append(articleIDs, fmt.Sprint(art.ID))
 	}
 
-	//////////////
-	// TODO Make call to ranker service here
-
-	// Get ranks for picked IDs
-	type vote struct {
-		ArticleID string
-		Count     string
-	}
-
-	var ranks []vote
-	yesterday := time.Now().AddDate(0, 0, -1)
-	err = s.Articles.Store.Database.Select("article_id,count(*) as count").Where("article_id IN (?)", articleIDs).Where("created_at > ?", yesterday).Group("article_id").Find(&ranks).Error
+	// Call ranker service
+	response, err := s.articles(nil, articlesRequest{ArticleIDs: articleIDs})
 	if err != nil {
 		return nil, err
 	}
-	//////////////
+	articleVotes := response.(articlesResponse).Articles
 
-	// Sort array
+	// Put articles into order
 	sort.Slice(articles, func(i, j int) bool {
 		iRank, jRank := "0", "0"
 		iArticle, jArticle := articles[i], articles[j]
 
-		for _, r := range ranks {
-			if r.ArticleID == fmt.Sprint(iArticle.ID) {
-				iRank = r.Count
-			} else if r.ArticleID == fmt.Sprint(jArticle.ID) {
-				jRank = r.Count
+		for _, articleVote := range articleVotes {
+			if articleVote.ArticleID == fmt.Sprint(iArticle.ID) {
+				iRank = fmt.Sprint(articleVote.Votes)
+			} else if articleVote.ArticleID == fmt.Sprint(jArticle.ID) {
+				jRank = fmt.Sprint(articleVote.Votes)
 			}
 		}
 
@@ -85,5 +76,8 @@ func newService() (*service, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &service{&Articles{store}}, nil
+	return &service{Manager: &Manager{store}}, nil
 }
+
+// ServiceMiddleware is a chainable middleware for Service
+type ServiceMiddleware func(Service) Service

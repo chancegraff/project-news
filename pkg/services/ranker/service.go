@@ -26,16 +26,13 @@ func (s *service) Articles(articleIDs []string) ([]models.ArticleVotes, error) {
 	db := s.Store.Database
 
 	// Build query
-	subquery := db.
-		Select("vote.*").
-		Table("vote").
-		SubQuery()
 	query := db.
-		Select("vote.article_id, count(t1.*) as votes").
-		Joins("LEFT JOIN ? AS t1 ON t1.article_id = vote.article_id", subquery).
-		Where("vote.article_id IN (?)", articleIDs).
-		Where("vote.created_at > ?", yesterday).
-		Group("vote.article_id")
+		Select("distinct(v1.article_id), count(v2.user_id) as votes").
+		Joins("LEFT JOIN vote AS v2 ON v2.article_id = v1.article_id").
+		Where("v1.article_id IN (?)", articleIDs).
+		Where("v1.created_at > ?", yesterday).
+		Order("v1 desc").
+		Group("votes")
 
 	// Commit transaction
 	if err := query.Scan(&articleVotesArray).Error; err != nil {

@@ -11,3 +11,10 @@ type allResponse struct {
 	Articles []models.Article `json:"articles"`
 	Err      string           `json:"err,omitempty"`
 }
+
+// Proxies
+
+type articlesResponse struct {
+	Articles []models.ArticleVotes `json:"articles"`
+	Err      string                `json:"err,omitempty"`
+}
