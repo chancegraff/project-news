@@ -27,7 +27,7 @@ func all(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get articles
-	articles, err := service.Articles.List(0, 20)
+	articles, err := service.Articles.List(offset, 20)
 	if err != nil {
 		logger.Error(err, http.StatusInternalServerError)
 		return
