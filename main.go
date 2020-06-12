@@ -41,7 +41,7 @@ func main() {
 	rt := mux.NewRouter()
 
 	auth.Listen(rt, service.Store.Database)
-	collector.Listen(rt, service.Store.Database)
+	collector.Listen(rt, service)
 	ranker.Listen(rt, service.Store.Database)
 	token.Listen(rt, service.Store.Database)
 

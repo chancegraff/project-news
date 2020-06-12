@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/chancegraff/project-news/internal/utils"
-	"github.com/chancegraff/project-news/pkg/models"
 )
 
 var apiURL = "/api/v1/ranks/articles"
@@ -28,8 +27,11 @@ func all(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get articles
-	var articles []models.Article
-	store.Offset(offset).Limit(20).Order("published_at desc").Find(&articles)
+	articles, err := service.Articles.List(0, 20)
+	if err != nil {
+		logger.Error(err, http.StatusInternalServerError)
+		return
+	}
 
 	// Pick article IDs
 	var articleIDs []string
@@ -39,7 +41,7 @@ func all(w http.ResponseWriter, r *http.Request) {
 
 	// Get ranks for picked IDs
 	var ranks []Vote
-	err := store.Select("article_id,count(*) as count").Where("article_id IN (?)", articleIDs).Where("created_at > ?", time.Now().AddDate(0, 0, -1)).Group("article_id").Find(&ranks).Error
+	err = service.Store.Database.Select("article_id,count(*) as count").Where("article_id IN (?)", articleIDs).Where("created_at > ?", time.Now().AddDate(0, 0, -1)).Group("article_id").Find(&ranks).Error
 	if err != nil {
 		logger.Error(err, http.StatusInternalServerError)
 		return

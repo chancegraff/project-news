@@ -1,15 +1,15 @@
 package collector
 
 import (
+	"github.com/chancegraff/project-news/internal/db"
 	"github.com/gorilla/mux"
-	"github.com/jinzhu/gorm"
 )
 
-var store *gorm.DB
+var service *db.Service
 
 // Listen will expose a port and watch it for requests
-func Listen(api *mux.Router, s *gorm.DB) *mux.Router {
-	store = s
+func Listen(api *mux.Router, s *db.Service) *mux.Router {
+	service = s
 	route := api.PathPrefix("/api/v1/articles").Subrouter()
 
 	route.HandleFunc("", all).Methods("GET", "OPTIONS")

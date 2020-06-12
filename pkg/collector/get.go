@@ -14,7 +14,7 @@ func get(w http.ResponseWriter, r *http.Request) {
 	articleID := mux.Vars(r)["id"]
 
 	var article models.Article
-	err := store.First(&article, articleID).Error
+	err := service.Store.Database.First(&article, articleID).Error
 	if err != nil {
 		logger.Error(err, http.StatusBadRequest)
 		return
