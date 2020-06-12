@@ -1,7 +1,7 @@
 package vendors
 
 import (
-	"github.com/chancegraff/project-news/pkg/models"
+	"github.com/chancegraff/project-news/internal/models"
 )
 
 func getNytArticles() ([]models.Article, error) {

@@ -35,15 +35,15 @@ var getCORS = handlers.CORS(
 func main() {
 	log.Println("Server is starting")
 
-	store := db.Init()
-	defer store.Close()
+	service, _ := db.NewService()
+	defer service.Stop()
 
 	rt := mux.NewRouter()
 
-	auth.Listen(rt, store)
-	collector.Listen(rt, store)
-	ranker.Listen(rt, store)
-	token.Listen(rt, store)
+	auth.Listen(rt, service.Store.Database)
+	collector.Listen(rt, service.Store.Database)
+	ranker.Listen(rt, service.Store.Database)
+	token.Listen(rt, service.Store.Database)
 
 	path, _ := os.Getwd()
 	fp := filepath.Join(path, "web", "build")
@@ -66,7 +66,8 @@ func main() {
 
 	go func() {
 		for {
-			db.FillArticles(store, vendors.Get())
+			vendors := vendors.Get()
+			service.Articles.Batch(vendors)
 			log.Println("Server got articles")
 			time.Sleep(5 * time.Minute)
 		}
