@@ -8,8 +8,14 @@ import (
 )
 
 func main() {
-	svc := service{}
+	// Start the service
+	svc, err := newService()
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 
+	// Create the endpoint handlers
 	getHandler := httptransport.NewServer(
 		makeGetEndpoint(svc),
 		decodeGetRequest,
@@ -22,9 +28,11 @@ func main() {
 		encodeResponse,
 	)
 
+	// Assign routes
 	http.Handle("/get", getHandler)
 	http.Handle("/all", allHandler)
 
-	// Available at http://collector.project-news-voter.app.localspace:7999/
+	// Start server
 	log.Fatal(http.ListenAndServe(":7999", nil))
+	// Available at http://collector.project-news-voter.app.localspace:7999/
 }

@@ -16,33 +16,19 @@ type Service interface {
 	Get(id int) (models.Article, error)
 }
 
-type service struct{}
+type service struct {
+	Articles *Articles
+}
 
-// Get will return an article from the database
-func (service) Get(id int) (models.Article, error) {
-	// Instantiate a database connection
-	dbService, _ := db.NewService()
-	defer dbService.Stop()
-
-	// Get article
-	var article models.Article
-	err := dbService.Store.Database.First(&article, id).Error
-	if err != nil {
-		return article, err
-	}
-
-	// Return result
-	return article, nil
+// Get will find and return a single article from the database that matches the ID
+func (s *service) Get(id int) (models.Article, error) {
+	return s.Articles.First(id)
 }
 
 // All will return articles from the database with their rank
-func (service) All(offset int) ([]models.Article, error) {
-	// Instantiate a database connection
-	dbService, _ := db.NewService()
-	defer dbService.Stop()
-
+func (s *service) All(offset int) ([]models.Article, error) {
 	// Get articles
-	articles, err := dbService.Articles.List(offset, 20)
+	articles, err := s.Articles.List(offset, 20)
 	if err != nil {
 		return nil, err
 	}
@@ -53,6 +39,7 @@ func (service) All(offset int) ([]models.Article, error) {
 		articleIDs = append(articleIDs, fmt.Sprint(art.ID))
 	}
 
+	//////////////
 	// TODO Make call to ranker service here
 
 	// Get ranks for picked IDs
@@ -62,10 +49,12 @@ func (service) All(offset int) ([]models.Article, error) {
 	}
 
 	var ranks []vote
-	err = dbService.Store.Database.Select("article_id,count(*) as count").Where("article_id IN (?)", articleIDs).Where("created_at > ?", time.Now().AddDate(0, 0, -1)).Group("article_id").Find(&ranks).Error
+	yesterday := time.Now().AddDate(0, 0, -1)
+	err = s.Articles.Store.Database.Select("article_id,count(*) as count").Where("article_id IN (?)", articleIDs).Where("created_at > ?", yesterday).Group("article_id").Find(&ranks).Error
 	if err != nil {
 		return nil, err
 	}
+	//////////////
 
 	// Sort array
 	sort.Slice(articles, func(i, j int) bool {
@@ -88,4 +77,13 @@ func (service) All(offset int) ([]models.Article, error) {
 
 	// Return response
 	return articles, nil
+}
+
+// NewService instantiates the service with a connection to the database
+func newService() (*service, error) {
+	store, err := db.NewStore()
+	if err != nil {
+		return nil, err
+	}
+	return &service{&Articles{store}}, nil
 }
