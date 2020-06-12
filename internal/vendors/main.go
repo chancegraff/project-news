@@ -1,0 +1,3 @@
+package vendors
+
+func main() {}
