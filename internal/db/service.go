@@ -10,24 +10,29 @@ type Service struct {
 	Articles *Articles
 }
 
-// NewService will instantiate a Service
-func NewService() (*Service, error) {
+// Start will open connections and start the service
+func (s *Service) Start() error {
 	// Create store
 	store, err := NewStore()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	// Create service
-	service := Service{Store: store}
-
 	// Bind children
-	service.Articles = NewArticles(&service)
+	s.Store = store
+	s.Articles = &Articles{s}
 
-	return &service, nil
+	return nil
 }
 
 // Stop will close connections and stop the service
 func (s *Service) Stop() {
-	s.Store.Close()
+	s.Store.Stop()
+}
+
+// NewService will instantiate a database Service and start it
+func NewService() (*Service, error) {
+	service := Service{}
+	err := service.Start()
+	return &service, err
 }

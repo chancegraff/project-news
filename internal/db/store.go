@@ -35,12 +35,12 @@ func (s *Store) Migrate() {
 	s.Database.AutoMigrate(&models.Vote{})
 }
 
-// Close will close the connection to the database
-func (s *Store) Close() {
+// Stop will close the connection to the database
+func (s *Store) Stop() {
 	s.Database.Close()
 }
 
-// NewStore will instantiate a Store
+// NewStore will instantiate a database Store
 func NewStore() (*Store, error) {
 	store := Store{}
 
