@@ -12,8 +12,8 @@ type Endpoints struct {
 	Vote     endpoint.Endpoint
 }
 
-// MakeEndpoints instantiates the endpoints for the service
-func MakeEndpoints(s service.Service) Endpoints {
+// NewEndpoints instantiates the endpoints for the service
+func NewEndpoints(s service.Service) Endpoints {
 	return Endpoints{
 		Articles: makeArticlesEndpoint(s),
 		User:     makeUserEndpoint(s),

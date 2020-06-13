@@ -11,6 +11,11 @@ import (
 // HTTP ...
 type HTTP struct{}
 
+// Start will begin the HTTP server
+func (HTTP) Start(port string) error {
+	return http.ListenAndServe(port, nil)
+}
+
 // NewHTTPServer instantiates a new HTTP server with the services endpoints
 func NewHTTPServer(endpoints endpoints.Endpoints) HTTP {
 	articles := httptransport.NewServer(
@@ -34,9 +39,4 @@ func NewHTTPServer(endpoints endpoints.Endpoints) HTTP {
 	http.Handle("/vote", vote)
 
 	return HTTP{}
-}
-
-// Start will begin the HTTP server
-func (HTTP) Start(port string) error {
-	return http.ListenAndServe(port, nil)
 }

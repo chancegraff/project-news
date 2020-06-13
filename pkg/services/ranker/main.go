@@ -11,7 +11,7 @@ import (
 func main() {
 	// Setup the service
 	svc := service.NewService()
-	endpoints := endpoints.MakeEndpoints(svc)
+	endpoints := endpoints.NewEndpoints(svc)
 	server := server.NewHTTPServer(endpoints)
 
 	// Start server at http://api.project-news-voter.app.localspace:7998/

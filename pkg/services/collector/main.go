@@ -17,7 +17,7 @@ func main() {
 	}
 
 	// Setup middlewares
-	svc = articlesEndpointMiddleware("http://ranker.project-news-voter.app.localspace:7998/")(svc)
+	svc = articlesEndpointMiddleware()(svc)
 
 	// Create the endpoint handlers
 	getHandler := httptransport.NewServer(

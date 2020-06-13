@@ -10,10 +10,11 @@ import (
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
-func articlesEndpointMiddleware(proxyURL string) ServiceMiddleware {
+func articlesEndpointMiddleware() ServiceMiddleware {
 	return func(next Service) Service {
 		return articlesmw{
-			articles: makeArticlesProxy(proxyURL),
+			Service:  next,
+			articles: makeArticlesEndpoint(),
 		}
 	}
 }
@@ -35,13 +36,10 @@ func (mw articlesmw) Articles(articleIDs []string) ([]models.ArticleVotes, error
 	return resp.Articles, nil
 }
 
-func makeArticlesProxy(proxyURL string) endpoint.Endpoint {
-	u, err := url.Parse(proxyURL)
+func makeArticlesEndpoint() endpoint.Endpoint {
+	u, err := url.Parse("http://ranker.project-news-voter.app.localspace:7998/")
 	if err != nil {
 		panic(err)
-	}
-	if u.Path == "" {
-		u.Path = "/articles"
 	}
 	return httptransport.NewClient(
 		"GET",
