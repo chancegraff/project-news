@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/chancegraff/project-news/internal/models"
-	"github.com/chancegraff/project-news/pkg/services/collector/interfaces"
+	"github.com/chancegraff/project-news/pkg/services/collector/transports"
 )
 
 // All will return articles from the database with their rank
@@ -27,11 +27,11 @@ func (s *service) All(offset int) ([]models.Article, error) {
 	}
 
 	// Call ranker service
-	response, err := s.articles(nil, interfaces.ArticlesRequest{ArticleIDs: articleIDs})
+	response, err := s.articles(nil, transports.ArticlesRequest{ArticleIDs: articleIDs})
 	if err != nil {
 		return nil, err
 	}
-	articleVotes := response.(interfaces.ArticlesResponse).Articles
+	articleVotes := response.(transports.ArticlesResponse).Articles
 
 	// Put articles into order
 	sort.Slice(articles, func(i, j int) bool {

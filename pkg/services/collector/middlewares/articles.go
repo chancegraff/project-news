@@ -7,7 +7,6 @@ import (
 
 	"github.com/chancegraff/project-news/internal/models"
 	"github.com/chancegraff/project-news/internal/utils"
-	"github.com/chancegraff/project-news/pkg/services/collector/interfaces"
 	"github.com/chancegraff/project-news/pkg/services/collector/service"
 	"github.com/chancegraff/project-news/pkg/services/collector/transports"
 	"github.com/go-kit/kit/circuitbreaker"
@@ -41,11 +40,11 @@ type ArticlesMiddleware struct {
 
 // Articles ...
 func (mw ArticlesMiddleware) Articles(articleIDs []string) ([]models.ArticleVotes, error) {
-	response, err := mw.articles(nil, interfaces.ArticlesRequest{ArticleIDs: articleIDs})
+	response, err := mw.articles(nil, transports.ArticlesRequest{ArticleIDs: articleIDs})
 	if err != nil {
 		return []models.ArticleVotes{}, err
 	}
-	resp := response.(interfaces.ArticlesResponse)
+	resp := response.(transports.ArticlesResponse)
 	if resp.Err != "" {
 		return resp.Articles, errors.New(resp.Err)
 	}

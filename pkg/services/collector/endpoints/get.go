@@ -3,22 +3,22 @@ package endpoints
 import (
 	"context"
 
-	"github.com/chancegraff/project-news/pkg/services/collector/interfaces"
 	"github.com/chancegraff/project-news/pkg/services/collector/service"
+	"github.com/chancegraff/project-news/pkg/services/collector/transports"
 	"github.com/go-kit/kit/endpoint"
 )
 
 func makeGetEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
-		req := request.(interfaces.GetRequest)
+		req := request.(transports.GetRequest)
 		article, err := svc.Get(req.ID)
 		if err != nil {
-			return interfaces.GetResponse{
+			return transports.GetResponse{
 				Article: article,
 				Err:     err.Error(),
 			}, nil
 		}
-		return interfaces.GetResponse{
+		return transports.GetResponse{
 			Article: article,
 			Err:     "",
 		}, nil
