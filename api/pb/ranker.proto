@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+service RankerService {
+    rpc Articles(ArticlesRequest) returns (ArticlesReply) {}
+    rpc User(UserRequest) returns (UserReply) {}
+    rpc Vote(VoteRequest) returns (VoteReply) {}
+}
+
+message ArticlesRequest {
+
+}
+
+message ArticlesReply {
+
+}
