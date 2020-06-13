@@ -14,7 +14,7 @@ type Service interface {
 }
 
 type service struct {
-	Manager  *manager.Manager
+	manager  *manager.Manager
 	articles endpoint.Endpoint
 }
 
@@ -25,10 +25,11 @@ func NewService() Service {
 		panic(err)
 	}
 	svc := &service{
-		Manager: &manager.Manager{
+		manager: &manager.Manager{
 			Store: store,
 		},
 	}
+	go svc.Collect()
 	return svc
 }
 

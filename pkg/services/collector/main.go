@@ -1,4 +1,4 @@
-package collector
+package main
 
 import (
 	"log"
@@ -16,8 +16,8 @@ func main() {
 	svc = middlewares.BindService(svc)
 	endpoints := endpoints.NewEndpoints(svc)
 	server := server.NewHTTPServer(endpoints)
+	defer server.Stop()
 
 	// Start server at http://api.project-news-voter.app.localspace:7999/
-	log.Println("Server started at :7998")
-	log.Fatal(server.Start(":7998"))
+	log.Fatal(server.Start())
 }

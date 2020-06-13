@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"log"
 	"sort"
 	"strconv"
 
@@ -11,8 +12,10 @@ import (
 
 // All will return articles from the database with their rank
 func (s *service) All(offset int) ([]models.Article, error) {
+	log.Println("All service called")
+
 	// Get articles
-	articles, err := s.Manager.List(offset, 20)
+	articles, err := s.manager.List(offset, 20)
 	if err != nil {
 		return nil, err
 	}

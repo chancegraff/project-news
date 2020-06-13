@@ -1,3 +1,0 @@
-package vendors
-
-func main() {}
