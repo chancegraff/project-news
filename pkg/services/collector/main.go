@@ -2,41 +2,22 @@ package collector
 
 import (
 	"log"
-	"net/http"
 
-	httptransport "github.com/go-kit/kit/transport/http"
+	"github.com/chancegraff/project-news/pkg/services/collector/endpoints"
+	"github.com/chancegraff/project-news/pkg/services/collector/middlewares"
+	"github.com/chancegraff/project-news/pkg/services/collector/server"
+	"github.com/chancegraff/project-news/pkg/services/collector/service"
+	_ "github.com/joho/godotenv/autoload" // Autoload environment variables from file
 )
 
 func main() {
-	// Start the service
-	var svc Service
-	svc, err := newService()
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
+	// Setup the service
+	svc := service.NewService()
+	svc = middlewares.BindService(svc)
+	endpoints := endpoints.NewEndpoints(svc)
+	server := server.NewHTTPServer(endpoints)
 
-	// Setup middlewares
-	svc = articlesEndpointMiddleware()(svc)
-
-	// Create the endpoint handlers
-	getHandler := httptransport.NewServer(
-		makeGetEndpoint(svc),
-		decodeGetRequest,
-		encodeResponse,
-	)
-
-	allHandler := httptransport.NewServer(
-		makeAllEndpoint(svc),
-		decodeAllRequest,
-		encodeResponse,
-	)
-
-	// Assign routes
-	http.Handle("/get", getHandler)
-	http.Handle("/all", allHandler)
-
-	// Start server
-	log.Fatal(http.ListenAndServe(":7999", nil))
-	// Available at http://collector.project-news-voter.app.localspace:7999/
+	// Start server at http://api.project-news-voter.app.localspace:7999/
+	log.Println("Server started at :7998")
+	log.Fatal(server.Start(":7998"))
 }

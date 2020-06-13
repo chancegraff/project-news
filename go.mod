@@ -9,5 +9,8 @@ require (
 	github.com/gorilla/mux v1.7.4
 	github.com/jinzhu/gorm v1.9.12
 	github.com/joho/godotenv v1.3.0
+	github.com/sony/gobreaker v0.4.1
 	golang.org/x/crypto v0.0.0-20200427165652-729f1e841bcc
+	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1
+
 )

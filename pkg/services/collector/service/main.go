@@ -19,17 +19,18 @@ type service struct {
 }
 
 // NewService instantiates the service with a connection to the database
-func NewService() (Service, error) {
+func NewService() Service {
 	store, err := db.NewStore()
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
-	return &service{
+	svc := &service{
 		Manager: &manager.Manager{
 			Store: store,
 		},
-	}, nil
+	}
+	return svc
 }
 
-// ServiceMiddleware is a chainable middleware for Service
-type ServiceMiddleware func(Service) Service
+// Middleware is a chainable middleware for Service
+type Middleware func(Service) Service
