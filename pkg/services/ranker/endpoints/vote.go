@@ -2,7 +2,9 @@ package endpoints
 
 import (
 	"context"
+	"errors"
 
+	"github.com/chancegraff/project-news/internal/models"
 	"github.com/chancegraff/project-news/pkg/services/ranker/service"
 	"github.com/chancegraff/project-news/pkg/services/ranker/transports"
 	"github.com/go-kit/kit/endpoint"
@@ -24,4 +26,18 @@ func MakeVoteEndpoint(svc service.Service) endpoint.Endpoint {
 			Err:     "",
 		}, nil
 	}
+}
+
+// Vote ...
+func (e Endpoints) Vote(ctx context.Context, articleID string) (models.ArticleVotes, error) {
+	req := transports.VoteRequest{ArticleID: articleID}
+	resp, err := e.VoteEndpoint(ctx, req)
+	if err != nil {
+		return models.ArticleVotes{}, err
+	}
+	voteResp := resp.(transports.VoteResponse)
+	if voteResp.Err != "" {
+		return voteResp.Article, errors.New(voteResp.Err)
+	}
+	return voteResp.Article, nil
 }

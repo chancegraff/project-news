@@ -12,6 +12,7 @@ import (
 )
 
 // TODO Refactor calls to database into Manager
+// TODO Create protocol buffer; compile into Golang; setup to be used with Collector service
 
 // Runs locally at 7998 and on the server at:
 // http://api.project-news-voter.app.localspace:7998/
