@@ -30,6 +30,7 @@ func MakeLoggingMiggleware() service.Middleware {
 func (mw *LoggingMiddleware) Articles(articleIDs []string) (output []models.ArticleVotes, err error) {
 	defer func(begin time.Time) {
 		mw.logger.Log(
+			"service", "ranker",
 			"method", "articles",
 			"articleIDs", articleIDs,
 			"output", output,
@@ -45,6 +46,7 @@ func (mw *LoggingMiddleware) Articles(articleIDs []string) (output []models.Arti
 func (mw *LoggingMiddleware) User(userID string) (output models.UserVotes, err error) {
 	defer func(begin time.Time) {
 		mw.logger.Log(
+			"service", "ranker",
 			"method", "user",
 			"userID", userID,
 			"output", output,
@@ -60,6 +62,7 @@ func (mw *LoggingMiddleware) User(userID string) (output models.UserVotes, err e
 func (mw *LoggingMiddleware) Vote(articleID, userID string) (output models.ArticleVotes, err error) {
 	defer func(begin time.Time) {
 		mw.logger.Log(
+			"service", "ranker",
 			"method", "articles",
 			"articleID", articleID,
 			"userID", userID,
