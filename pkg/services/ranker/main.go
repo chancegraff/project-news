@@ -6,6 +6,7 @@ import (
 	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/services/ranker/endpoints"
 	"github.com/chancegraff/project-news/pkg/services/ranker/manager"
+	"github.com/chancegraff/project-news/pkg/services/ranker/middlewares"
 	"github.com/chancegraff/project-news/pkg/services/ranker/server"
 	"github.com/chancegraff/project-news/pkg/services/ranker/service"
 	_ "github.com/joho/godotenv/autoload" // Autoload environment variables from file
@@ -26,6 +27,7 @@ func main() {
 
 	// Setup the service
 	svc := service.NewService(&mgr)
+	svc = middlewares.BindService(svc)
 	endpoints := endpoints.NewEndpoints(svc)
 
 	// Create the server

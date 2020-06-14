@@ -20,3 +20,6 @@ type service struct {
 func NewService(mgr *manager.Manager) Service {
 	return &service{Manager: mgr}
 }
+
+// Middleware is a chainable middleware for Service
+type Middleware func(Service) Service
