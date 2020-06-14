@@ -1,7 +1,6 @@
 package service
 
 import (
-	"github.com/chancegraff/project-news/internal/db"
 	"github.com/chancegraff/project-news/internal/models"
 	"github.com/chancegraff/project-news/pkg/services/collector/manager"
 	"github.com/go-kit/kit/endpoint"
@@ -14,23 +13,15 @@ type Service interface {
 }
 
 type service struct {
-	manager  *manager.Manager
-	articles endpoint.Endpoint
+	manager          *manager.Manager
+	ArticlesEndpoint endpoint.Endpoint
 }
 
 // NewService instantiates the service with a connection to the database
-func NewService() Service {
-	store, err := db.NewStore()
-	if err != nil {
-		panic(err)
+func NewService(manager *manager.Manager) Service {
+	return &service{
+		manager: manager,
 	}
-	svc := &service{
-		manager: &manager.Manager{
-			Store: store,
-		},
-	}
-	go svc.Collect()
-	return svc
 }
 
 // Middleware is a chainable middleware for Service

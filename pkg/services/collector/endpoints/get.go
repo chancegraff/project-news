@@ -2,13 +2,16 @@ package endpoints
 
 import (
 	"context"
+	"errors"
 
+	"github.com/chancegraff/project-news/internal/models"
 	"github.com/chancegraff/project-news/pkg/services/collector/service"
 	"github.com/chancegraff/project-news/pkg/services/collector/transports"
 	"github.com/go-kit/kit/endpoint"
 )
 
-func makeGetEndpoint(svc service.Service) endpoint.Endpoint {
+// MakeGetEndpoint ...
+func MakeGetEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
 		req := request.(transports.GetRequest)
 		article, err := svc.Get(req.ID)
@@ -23,4 +26,18 @@ func makeGetEndpoint(svc service.Service) endpoint.Endpoint {
 			Err:     "",
 		}, nil
 	}
+}
+
+// Get ...
+func (e Endpoints) Get(ctx context.Context, id int) (models.Article, error) {
+	req := transports.GetRequest{ID: id}
+	resp, err := e.GetEndpoint(ctx, req)
+	if err != nil {
+		return models.Article{}, err
+	}
+	getResp := resp.(transports.GetResponse)
+	if getResp.Err != "" {
+		return models.Article{}, errors.New(getResp.Err)
+	}
+	return getResp.Article, nil
 }

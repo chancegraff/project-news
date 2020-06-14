@@ -7,14 +7,14 @@ import (
 
 // Endpoints ...
 type Endpoints struct {
-	All endpoint.Endpoint
-	Get endpoint.Endpoint
+	AllEndpoint endpoint.Endpoint
+	GetEndpoint endpoint.Endpoint
 }
 
 // NewEndpoints ...
 func NewEndpoints(s service.Service) Endpoints {
 	return Endpoints{
-		All: makeAllEndpoint(s),
-		Get: makeGetEndpoint(s),
+		AllEndpoint: MakeAllEndpoint(s),
+		GetEndpoint: MakeGetEndpoint(s),
 	}
 }

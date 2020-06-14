@@ -27,7 +27,8 @@ func (s *service) All(offset int) ([]models.Article, error) {
 	}
 
 	// Call ranker service
-	response, err := s.articles(nil, transports.ArticlesRequest{ArticleIDs: articleIDs})
+	log.Println(s.Articles)
+	response, err := s.Articles(nil, transports.ArticlesRequest{ArticleIDs: articleIDs})
 	if err != nil {
 		return nil, err
 	}
