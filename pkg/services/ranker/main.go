@@ -1,19 +1,40 @@
-package ranker
+package main
 
 import (
-	"log"
+	"context"
 
+	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/services/ranker/endpoints"
+	"github.com/chancegraff/project-news/pkg/services/ranker/manager"
 	"github.com/chancegraff/project-news/pkg/services/ranker/server"
 	"github.com/chancegraff/project-news/pkg/services/ranker/service"
+	_ "github.com/joho/godotenv/autoload" // Autoload environment variables from file
 )
 
-func main() {
-	// Setup the service
-	svc := service.NewService()
-	endpoints := endpoints.NewEndpoints(svc)
-	server := server.NewHTTPServer(endpoints)
+// TODO Refactor calls to database into Manager
 
-	// Start server at http://api.project-news-voter.app.localspace:7998/
-	log.Fatal(server.Start(":7998"))
+// Runs locally at 7998 and on the server at:
+// http://api.project-news-voter.app.localspace:7998/
+func main() {
+	// Bind resources
+	ctx, cancel := context.WithCancel(context.Background())
+	done := utils.GetDoneChannel()
+
+	// Connect database manager
+	mgr := manager.NewManager()
+
+	// Setup the service
+	svc := service.NewService(&mgr)
+	endpoints := endpoints.NewEndpoints(svc)
+
+	// Create the server
+	server := server.NewHTTPServer(endpoints)
+	defer server.Stop(ctx)
+
+	// Start server
+	go server.Start(ctx)
+
+	// Bind until exit
+	<-*done
+	cancel()
 }

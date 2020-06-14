@@ -10,7 +10,7 @@ import (
 func (s *service) Articles(articleIDs []string) ([]models.ArticleVotes, error) {
 	var articleVotesArray []models.ArticleVotes
 	yesterday := time.Now().AddDate(0, 0, -1)
-	db := s.Store.Database
+	db := s.Manager.Store.Database
 
 	// Build query
 	query := db.

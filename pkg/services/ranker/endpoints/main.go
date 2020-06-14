@@ -7,16 +7,16 @@ import (
 
 // Endpoints implements the endpoints for the service
 type Endpoints struct {
-	Articles endpoint.Endpoint
-	User     endpoint.Endpoint
-	Vote     endpoint.Endpoint
+	ArticlesEndpoint endpoint.Endpoint
+	UserEndpoint     endpoint.Endpoint
+	VoteEndpoint     endpoint.Endpoint
 }
 
 // NewEndpoints instantiates the endpoints for the service
 func NewEndpoints(s service.Service) Endpoints {
 	return Endpoints{
-		Articles: makeArticlesEndpoint(s),
-		User:     makeUserEndpoint(s),
-		Vote:     makeVoteEndpoint(s),
+		ArticlesEndpoint: MakeArticlesEndpoint(s),
+		UserEndpoint:     MakeUserEndpoint(s),
+		VoteEndpoint:     MakeVoteEndpoint(s),
 	}
 }

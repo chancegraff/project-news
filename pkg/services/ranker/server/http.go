@@ -1,42 +1,70 @@
 package server
 
 import (
+	"context"
+	"fmt"
+	"log"
 	"net/http"
+	"time"
 
+	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/services/ranker/endpoints"
-	"github.com/chancegraff/project-news/pkg/services/ranker/transports"
-	httptransport "github.com/go-kit/kit/transport/http"
 )
 
 // HTTP ...
-type HTTP struct{}
+type HTTP struct {
+	endpoints *endpoints.Endpoints
+	server    *http.Server
+	address   string
+	port      int
+}
 
 // Start will begin the HTTP server
-func (HTTP) Start(port string) error {
-	return http.ListenAndServe(port, nil)
+func (h *HTTP) Start(parent context.Context) error {
+	_, cancel := context.WithCancel(parent)
+	log.Printf("Server started at %s", h.address)
+	err := h.server.ListenAndServe()
+	cancel()
+	return err
+}
+
+// Stop will stop the HTTP server
+func (h *HTTP) Stop(parent context.Context) error {
+	log.Printf("HTTP stopped")
+	return h.server.Shutdown(parent)
+}
+
+// NewMux will create a muxer with the routes registered
+func (h *HTTP) NewMux() *http.ServeMux {
+	mux := http.NewServeMux()
+	mux = h.MuxArticles(mux)
+	mux = h.MuxUser(mux)
+	mux = h.MuxVote(mux)
+	return mux
 }
 
 // NewHTTPServer instantiates a new HTTP server with the services endpoints
-func NewHTTPServer(endpoints endpoints.Endpoints) HTTP {
-	articles := httptransport.NewServer(
-		endpoints.Articles,
-		transports.DecodeArticlesRequest,
-		transports.EncodeResponse,
-	)
-	user := httptransport.NewServer(
-		endpoints.User,
-		transports.DecodeArticlesRequest,
-		transports.EncodeResponse,
-	)
-	vote := httptransport.NewServer(
-		endpoints.Vote,
-		transports.DecodeArticlesRequest,
-		transports.EncodeResponse,
-	)
+func NewHTTPServer(endpoints endpoints.Endpoints) *HTTP {
+	// Create the address
+	port := utils.GetRankerPort()
+	address := fmt.Sprint(":", port)
 
-	http.Handle("/articles", articles)
-	http.Handle("/user", user)
-	http.Handle("/vote", vote)
+	// Create HTTP from file
+	h := HTTP{
+		endpoints: &endpoints,
+		port:      port,
+		address:   address,
+	}
 
-	return HTTP{}
+	// Create Server from library
+	h.server = &http.Server{
+		Handler:      h.NewMux(),
+		Addr:         address,
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+
+	// Return HTTP
+	return &h
 }

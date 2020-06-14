@@ -1,11 +1,11 @@
 package service
 
 import (
-	"github.com/chancegraff/project-news/internal/db"
 	"github.com/chancegraff/project-news/internal/models"
+	"github.com/chancegraff/project-news/pkg/services/ranker/manager"
 )
 
-// Service ...
+// Service implements the ranker interface
 type Service interface {
 	Articles(articleIDs []string) ([]models.ArticleVotes, error)
 	User(userID string) (models.UserVotes, error)
@@ -13,14 +13,10 @@ type Service interface {
 }
 
 type service struct {
-	Store *db.Store
+	Manager *manager.Manager
 }
 
 // NewService instantiates the service with a connection to the database
-func NewService() Service {
-	store, err := db.NewStore()
-	if err != nil {
-		panic(err)
-	}
-	return &service{store}
+func NewService(mgr *manager.Manager) Service {
+	return &service{Manager: mgr}
 }

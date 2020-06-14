@@ -34,31 +34,36 @@ func (h *HTTP) Stop(parent context.Context) error {
 	return h.server.Shutdown(parent)
 }
 
-// MuxRoutes will create a muxer with routes registered
-func (h *HTTP) MuxRoutes() *http.ServeMux {
+// NewMux will create a muxer with routes registered
+func (h *HTTP) NewMux() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux = h.MuxAll(mux)
 	mux = h.MuxGet(mux)
 	return mux
 }
 
-// NewHTTPServer ...
+// NewHTTPServer instantiates a new HTTP server with the services endpoints
 func NewHTTPServer(endpoints endpoints.Endpoints) *HTTP {
+	// Create the address
 	port := utils.GetCollectorPort()
 	address := fmt.Sprint(":", port)
+
+	// Create HTTP from file
 	h := HTTP{
 		endpoints: &endpoints,
 		port:      port,
 		address:   address,
 	}
 
+	// Create Server from library
 	h.server = &http.Server{
-		Handler:      h.MuxRoutes(),
+		Handler:      h.NewMux(),
 		Addr:         address,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 		IdleTimeout:  60 * time.Second,
 	}
 
+	// Return HTTP
 	return &h
 }

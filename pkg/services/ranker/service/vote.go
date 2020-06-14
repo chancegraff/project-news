@@ -14,23 +14,23 @@ func (s *service) Vote(articleID, userID string) (models.ArticleVotes, error) {
 	}
 
 	// Look for an existing record and check for errors
-	findErr := s.Store.Database.Where(models.Vote{UserID: userID, ArticleID: articleID}).First(&buffer).Error
+	findErr := s.Manager.Store.Database.Where(models.Vote{UserID: userID, ArticleID: articleID}).First(&buffer).Error
 	if gorm.IsRecordNotFoundError(findErr) {
 		// If the record does not exist, create it
-		err := s.Store.Database.Create(&buffer).Error
+		err := s.Manager.Store.Database.Create(&buffer).Error
 		if err != nil {
 			return articleVotes, err
 		}
 	} else {
 		// If the record does exist, delete it
-		err := s.Store.Database.Delete(&buffer).Error
+		err := s.Manager.Store.Database.Delete(&buffer).Error
 		if err != nil {
 			return articleVotes, err
 		}
 	}
 
 	// Return array of user IDs associated with article
-	err := s.Store.Database.Select("article_id, count(*) as votes").Where("article_id = ?", articleID).Find(&articleVotes).Error
+	err := s.Manager.Store.Database.Select("article_id, count(*) as votes").Where("article_id = ?", articleID).Find(&articleVotes).Error
 	if err != nil {
 		return articleVotes, err
 	}

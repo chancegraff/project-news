@@ -7,7 +7,7 @@ func (s *service) User(userID string) (models.UserVotes, error) {
 	userVotes := models.UserVotes{UserID: userID}
 
 	// Get votes
-	err := s.Store.Database.Select("*").Where("user_id = ?", userID).Find(&userVotes.Votes).Error
+	err := s.Manager.Store.Database.Select("*").Where("user_id = ?", userID).Find(&userVotes.Votes).Error
 	if err != nil {
 		return userVotes, err
 	}

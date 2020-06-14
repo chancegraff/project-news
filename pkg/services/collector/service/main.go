@@ -19,9 +19,7 @@ type service struct {
 
 // NewService instantiates the service with a connection to the database
 func NewService(manager *manager.Manager) Service {
-	return &service{
-		manager: manager,
-	}
+	return &service{manager: manager}
 }
 
 // Middleware is a chainable middleware for Service

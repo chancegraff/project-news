@@ -13,9 +13,13 @@ import (
 	_ "github.com/joho/godotenv/autoload" // Autoload environment variables from file
 )
 
-// Runs localy at 7999 and on the server at:
+// Runs locally at 7999 and on the server at:
 // http://api.project-news-voter.app.localspace:7999/
 func main() {
+	// Bind resources
+	ctx, cancel := context.WithCancel(context.Background())
+	done := utils.GetDoneChannel()
+
 	// Create database manager
 	mgr := manager.NewManager()
 
@@ -23,10 +27,6 @@ func main() {
 	svc := service.NewService(&mgr)
 	svc = middlewares.BindService(svc)
 	endpoints := endpoints.NewEndpoints(svc)
-
-	// Bind resources
-	ctx, cancel := context.WithCancel(context.Background())
-	done := utils.GetDoneChannel()
 
 	// Create HTTP server
 	server := server.NewHTTPServer(endpoints)

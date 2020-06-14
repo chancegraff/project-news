@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package pb;
+package ranker;
 
 service RankerService {
     rpc Articles(ArticlesRequest) returns (ArticlesReply) {}
