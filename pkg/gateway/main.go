@@ -1,4 +1,4 @@
-package gateway
+package main
 
 // Exposes HTTP server that routes requests to various services via RPC
 

@@ -1,3 +1,3 @@
-package token
+package server
 
 func main() {}
