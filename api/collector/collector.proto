@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package collector;
+
+option go_package = "api/collector";
+
+// CollectorService
+
+service CollectorService {
+    rpc All(AllRequest) returns (AllResponse) {}
+    rpc Get(GetRequest) returns (GetResponse) {}
+}
+
+// Models
+
+message Article {
+    string title = 1;
+    string url = 2;
+    string thumbnail = 3;
+    string publishedAt = 4;
+    int32 id = 5;
+    string createdAt = 6;
+    string updatedAt = 7;
+}
+
+// Transports
+
+message AllRequest {
+    int32 offset = 1;
+}
+
+message AllResponse {
+    repeated Article articles = 1;
+    string err = 2;
+}
+
+message GetRequest {
+    int32 id = 1;
+}
+
+message GetResponse {
+    Article article = 1;
+    string err = 2;
+}

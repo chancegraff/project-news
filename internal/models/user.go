@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	_ "github.com/jinzhu/gorm/dialects/sqlite" // sqlite adapter
 )
 
@@ -14,4 +16,5 @@ type Credentials struct {
 type User struct {
 	Base
 	Credentials
+	VerifiedAt time.Time `json:"verified_at"`
 }

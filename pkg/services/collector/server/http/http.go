@@ -1,10 +1,10 @@
-package server
+package http
 
 import (
 	"context"
 	"fmt"
 	"log"
-	"net/http"
+	web "net/http"
 	"time"
 
 	"github.com/chancegraff/project-news/internal/utils"
@@ -14,7 +14,7 @@ import (
 // HTTP ...
 type HTTP struct {
 	endpoints *endpoints.Endpoints
-	server    *http.Server
+	server    *web.Server
 	address   string
 	port      int
 }
@@ -35,8 +35,8 @@ func (h *HTTP) Stop(parent context.Context) error {
 }
 
 // NewMux will create a muxer with routes registered
-func (h *HTTP) NewMux() *http.ServeMux {
-	mux := http.NewServeMux()
+func (h *HTTP) NewMux() *web.ServeMux {
+	mux := web.NewServeMux()
 	mux = h.MuxAll(mux)
 	mux = h.MuxGet(mux)
 	return mux
@@ -56,7 +56,7 @@ func NewHTTPServer(endpoints endpoints.Endpoints) *HTTP {
 	}
 
 	// Create Server from library
-	h.server = &http.Server{
+	h.server = &web.Server{
 		Handler:      h.NewMux(),
 		Addr:         address,
 		WriteTimeout: 15 * time.Second,

@@ -1,23 +1,26 @@
 package middlewares
 
-import "github.com/chancegraff/project-news/pkg/services/collector/service"
+import (
+	"github.com/chancegraff/project-news/pkg/services/collector/service"
+	"github.com/go-kit/kit/log"
+)
 
 // Middlewares ...
 type Middlewares struct {
-	Articles service.Middleware
+	Logger service.Middleware
 }
 
 // Bind will bind the service to the middlewares
 func (m *Middlewares) Bind(base service.Service) service.Service {
 	service := base
-	service = m.Articles(base)
+	service = m.Logger(base)
 	return service
 }
 
 // BindService will bind the service with the middlewares
-func BindService(service service.Service) service.Service {
+func BindService(logger log.Logger, service service.Service) service.Service {
 	m := Middlewares{
-		ArticlesProxyMiddleware(),
+		MakeLoggingMiggleware(logger),
 	}
 	return m.Bind(service)
 }

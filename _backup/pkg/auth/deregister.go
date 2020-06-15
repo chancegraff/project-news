@@ -3,6 +3,7 @@ package auth
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/models"
@@ -33,7 +34,7 @@ func deregister(wt http.ResponseWriter, rq *http.Request) {
 	}
 
 	// Deregister current user token
-	// store.Model(&tmp).Update("verified_at", time.Now())
+	store.Model(&tmp).Update("verified_at", time.Now())
 
 	// Return result
 	logger.Okay(map[string]string{"status": "ok"})
