@@ -16,8 +16,8 @@ import (
 
 // RPC ...
 type RPC struct {
-	endpoints *endpoints.Endpoints
-	server    pb.RankerServiceServer
+	endpoints pb.RankerServiceServer
+	server    *grpc.Server
 	listener  net.Listener
 	address   string
 	port      int
@@ -26,16 +26,8 @@ type RPC struct {
 // Start ...
 func (r *RPC) Start(parent context.Context, logger log.Logger) error {
 	_, cancel := context.WithCancel(parent)
-	listener, err := net.Listen("tcp", r.address)
-	if err != nil {
-		cancel()
-		return err
-	}
-	r.listener = listener
-	server := grpc.NewServer()
 	level.Info(logger).Log("msg", "service started")
-	pb.RegisterRankerServiceServer(server, r.server)
-	err = server.Serve(r.listener)
+	err := r.server.Serve(r.listener)
 	cancel()
 	return err
 }
@@ -43,19 +35,36 @@ func (r *RPC) Start(parent context.Context, logger log.Logger) error {
 // Stop ...
 func (r *RPC) Stop(parent context.Context, logger log.Logger) error {
 	level.Info(logger).Log("msg", "service stopped")
-	return r.listener.Close()
+	err := r.listener.Close()
+	if err != nil {
+		return err
+	}
+	r.server.GracefulStop()
+	return nil
 }
 
 // NewRPCServer ...
-func NewRPCServer(endpoints endpoints.Endpoints) RPC {
+func NewRPCServer(e endpoints.Endpoints) RPC {
 	// Create the address
 	port := utils.GetRankerPort()
 	address := fmt.Sprint(":", port)
 
+	// Bind a listener
+	listener, err := net.Listen("tcp", address)
+	if err != nil {
+		panic(err)
+	}
+
+	// Bind to protobuffs
+	endpoints := rpc.NewServerEndpoints(e)
+	server := grpc.NewServer()
+	pb.RegisterRankerServiceServer(server, endpoints)
+
 	// Return RPC interface
 	return RPC{
-		endpoints: &endpoints,
-		server:    rpc.NewServer(endpoints),
+		endpoints: endpoints,
+		server:    server,
+		listener:  listener,
 		port:      port,
 		address:   address,
 	}

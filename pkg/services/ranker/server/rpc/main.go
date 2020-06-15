@@ -5,29 +5,28 @@ import (
 
 	pb "github.com/chancegraff/project-news/api/ranker"
 	"github.com/chancegraff/project-news/pkg/services/ranker/endpoints"
-	"github.com/chancegraff/project-news/pkg/services/ranker/server/routes"
 	gt "github.com/go-kit/kit/transport/grpc"
 )
 
-// Server ...
-type Server struct {
-	articles gt.Handler
-	user     gt.Handler
-	vote     gt.Handler
+// ServerEndpoints ...
+type ServerEndpoints struct {
+	ArticlesEndpoint gt.Handler
+	UserEndpoint     gt.Handler
+	VoteEndpoint     gt.Handler
 }
 
-// NewServer ...
-func NewServer(endpoints endpoints.Endpoints) pb.RankerServiceServer {
-	return &Server{
-		articles: routes.ArticlesRPC(&endpoints),
-		user:     routes.UserRPC(&endpoints),
-		vote:     routes.VoteRPC(&endpoints),
+// NewServerEndpoints ...
+func NewServerEndpoints(endpoints endpoints.Endpoints) pb.RankerServiceServer {
+	return &ServerEndpoints{
+		ArticlesEndpoint: MakeArticlesEndpoint(&endpoints),
+		UserEndpoint:     MakeUserEndpoint(&endpoints),
+		VoteEndpoint:     MakeVoteEndpoint(&endpoints),
 	}
 }
 
 // Articles ...
-func (r *Server) Articles(ctx context.Context, req *pb.ArticlesRequest) (*pb.ArticlesResponse, error) {
-	_, resp, err := r.articles.ServeGRPC(ctx, req)
+func (s *ServerEndpoints) Articles(ctx context.Context, req *pb.ArticlesRequest) (*pb.ArticlesResponse, error) {
+	_, resp, err := s.ArticlesEndpoint.ServeGRPC(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -35,8 +34,8 @@ func (r *Server) Articles(ctx context.Context, req *pb.ArticlesRequest) (*pb.Art
 }
 
 // User ...
-func (r *Server) User(ctx context.Context, req *pb.UserRequest) (*pb.UserResponse, error) {
-	_, resp, err := r.user.ServeGRPC(ctx, req)
+func (s *ServerEndpoints) User(ctx context.Context, req *pb.UserRequest) (*pb.UserResponse, error) {
+	_, resp, err := s.UserEndpoint.ServeGRPC(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -44,8 +43,8 @@ func (r *Server) User(ctx context.Context, req *pb.UserRequest) (*pb.UserRespons
 }
 
 // Vote ...
-func (r *Server) Vote(ctx context.Context, req *pb.VoteRequest) (*pb.VoteResponse, error) {
-	_, resp, err := r.vote.ServeGRPC(ctx, req)
+func (s *ServerEndpoints) Vote(ctx context.Context, req *pb.VoteRequest) (*pb.VoteResponse, error) {
+	_, resp, err := s.VoteEndpoint.ServeGRPC(ctx, req)
 	if err != nil {
 		return nil, err
 	}

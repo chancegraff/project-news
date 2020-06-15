@@ -3,20 +3,20 @@ package server
 import (
 	"context"
 	"fmt"
-	"net/http"
+	web "net/http"
 	"time"
 
 	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/services/ranker/endpoints"
-	"github.com/chancegraff/project-news/pkg/services/ranker/server/routes"
+	"github.com/chancegraff/project-news/pkg/services/ranker/server/http"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 )
 
 // HTTP ...
 type HTTP struct {
-	endpoints *endpoints.Endpoints
-	server    *http.Server
+	endpoints http.ServerEndpoints
+	server    *web.Server
 	address   string
 	port      int
 }
@@ -36,37 +36,39 @@ func (h *HTTP) Stop(parent context.Context, logger log.Logger) error {
 	return h.server.Shutdown(parent)
 }
 
-// NewMux will create a muxer with the routes registered
-func (h *HTTP) NewMux() *http.ServeMux {
-	mux := http.NewServeMux()
-	mux = routes.ArticlesHTTP(h.endpoints, mux)
-	mux = routes.UserHTTP(h.endpoints, mux)
-	mux = routes.VoteHTTP(h.endpoints, mux)
+// Mux will register the routes to a muxer and return it
+func Mux(endpoints http.ServerEndpoints) *web.ServeMux {
+	mux := web.NewServeMux()
+	mux.HandleFunc("/articles", endpoints.Articles)
+	mux.HandleFunc("/user", endpoints.User)
+	mux.HandleFunc("/vote", endpoints.Vote)
 	return mux
 }
 
-// NewHTTPServer instantiates a new HTTP server with the services endpoints
-func NewHTTPServer(endpoints endpoints.Endpoints) *HTTP {
+// NewServer will create a new HTTP server
+func NewServer(e endpoints.Endpoints) HTTP {
 	// Create the address
 	port := utils.GetRankerPort()
 	address := fmt.Sprint(":", port)
 
-	// Create HTTP from file
-	h := HTTP{
-		endpoints: &endpoints,
-		port:      port,
-		address:   address,
-	}
+	// Build the endpoints
+	endpoints := http.NewServerEndpoints(e)
+	handler := Mux(endpoints)
 
-	// Create Server from library
-	h.server = &http.Server{
-		Handler:      h.NewMux(),
+	// Bind a listener
+	server := &web.Server{
+		Handler:      handler,
 		Addr:         address,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 		IdleTimeout:  60 * time.Second,
 	}
 
-	// Return HTTP
-	return &h
+	// Return HTTP interface
+	return HTTP{
+		server:    server,
+		endpoints: endpoints,
+		address:   address,
+		port:      port,
+	}
 }
