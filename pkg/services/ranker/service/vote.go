@@ -2,37 +2,20 @@ package service
 
 import (
 	"github.com/chancegraff/project-news/internal/models"
-	"github.com/jinzhu/gorm"
 )
 
 // Vote will take an article ID and a user ID and returns the new vote count
 func (s *service) Vote(articleID, userID string) (models.ArticleVotes, error) {
-	articleVotes := models.ArticleVotes{ArticleID: articleID}
-	buffer := models.Vote{
-		ArticleID: articleID,
-		UserID:    userID,
-	}
-
-	// Look for an existing record and check for errors
-	findErr := s.Manager.Store.Database.Where(models.Vote{UserID: userID, ArticleID: articleID}).First(&buffer).Error
-	if gorm.IsRecordNotFoundError(findErr) {
-		// If the record does not exist, create it
-		err := s.Manager.Store.Database.Create(&buffer).Error
-		if err != nil {
-			return articleVotes, err
-		}
-	} else {
-		// If the record does exist, delete it
-		err := s.Manager.Store.Database.Delete(&buffer).Error
-		if err != nil {
-			return articleVotes, err
-		}
-	}
-
-	// Return array of user IDs associated with article
-	err := s.Manager.Store.Database.Select("article_id, count(*) as votes").Where("article_id = ?", articleID).Find(&articleVotes).Error
+	// Create a new vote or delete an existing one
+	err := s.Manager.CreateOrDelete(articleID, userID)
 	if err != nil {
-		return articleVotes, err
+		return models.ArticleVotes{}, err
+	}
+
+	// Get the new vote count for the article
+	articleVotes, err := s.Manager.GetVotesForArticle(articleID)
+	if err != nil {
+		return models.ArticleVotes{}, err
 	}
 
 	return articleVotes, nil
