@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"net"
 
-	pb "github.com/chancegraff/project-news/api/ranker"
+	pb "github.com/chancegraff/project-news/api/auth"
 	"github.com/chancegraff/project-news/internal/utils"
-	"github.com/chancegraff/project-news/pkg/services/ranker/endpoints"
-	"github.com/chancegraff/project-news/pkg/services/ranker/server/rpc"
+	"github.com/chancegraff/project-news/pkg/services/auth/endpoints"
+	"github.com/chancegraff/project-news/pkg/services/auth/server/rpc"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"google.golang.org/grpc"
@@ -16,7 +16,7 @@ import (
 
 // RPC ...
 type RPC struct {
-	endpoints pb.RankerServiceServer
+	endpoints pb.AuthServiceServer
 	server    *grpc.Server
 	listener  net.Listener
 	address   string
@@ -58,7 +58,7 @@ func NewRPCServer(e endpoints.Endpoints) RPC {
 	// Bind to protobuffs
 	endpoints := rpc.NewServerEndpoints(e)
 	server := grpc.NewServer()
-	pb.RegisterRankerServiceServer(server, endpoints)
+	pb.RegisterAuthServiceServer(server, endpoints)
 
 	// Return RPC interface
 	return RPC{

@@ -6,11 +6,11 @@ import (
 	gt "github.com/go-kit/kit/transport/grpc"
 )
 
-// MakeUserEndpoint ...
-func MakeUserEndpoint(endpoints *endpoints.Endpoints) *gt.Server {
+// MakeVerifyEndpoint ...
+func MakeVerifyEndpoint(endpoints *endpoints.Endpoints) *gt.Server {
 	return gt.NewServer(
-		endpoints.UserEndpoint,
-		transports.DecodeUserRPCRequest,
-		transports.EncodeUserRPCResponse,
+		endpoints.VerifyEndpoint,
+		transports.DecodeVerifyRPCRequest,
+		transports.EncodeVerifyRPCResponse,
 	)
 }

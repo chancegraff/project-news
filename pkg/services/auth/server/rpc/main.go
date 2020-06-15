@@ -3,34 +3,45 @@ package rpc
 import (
 	"context"
 
-	pb "github.com/chancegraff/project-news/api/ranker"
-	"github.com/chancegraff/project-news/pkg/services/ranker/endpoints"
+	pb "github.com/chancegraff/project-news/api/auth"
+	"github.com/chancegraff/project-news/pkg/services/auth/endpoints"
 	gt "github.com/go-kit/kit/transport/grpc"
 )
 
 // ServerEndpoints ...
 type ServerEndpoints struct {
-	ArticlesEndpoint gt.Handler
-	UserEndpoint     gt.Handler
-	VoteEndpoint     gt.Handler
+	DeregisterEndpoint gt.Handler
+	RegisterEndpoint   gt.Handler
+	UserEndpoint       gt.Handler
+	VerifyEndpoint     gt.Handler
 }
 
 // NewServerEndpoints ...
-func NewServerEndpoints(endpoints endpoints.Endpoints) pb.RankerServiceServer {
+func NewServerEndpoints(endpoints endpoints.Endpoints) pb.AuthServiceServer {
 	return &ServerEndpoints{
-		ArticlesEndpoint: MakeArticlesEndpoint(&endpoints),
-		UserEndpoint:     MakeUserEndpoint(&endpoints),
-		VoteEndpoint:     MakeVoteEndpoint(&endpoints),
+		DeregisterEndpoint: MakeDeregisterEndpoint(&endpoints),
+		RegisterEndpoint:   MakeRegisterEndpoint(&endpoints),
+		UserEndpoint:       MakeUserEndpoint(&endpoints),
+		VerifyEndpoint:     MakeVerifyEndpoint(&endpoints),
 	}
 }
 
-// Articles ...
-func (s *ServerEndpoints) Articles(ctx context.Context, req *pb.ArticlesRequest) (*pb.ArticlesResponse, error) {
-	_, resp, err := s.ArticlesEndpoint.ServeGRPC(ctx, req)
+// Deregister ...
+func (s *ServerEndpoints) Deregister(ctx context.Context, req *pb.DeregisterRequest) (*pb.DeregisterResponse, error) {
+	_, resp, err := s.DeregisterEndpoint.ServeGRPC(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	return resp.(*pb.ArticlesResponse), nil
+	return resp.(*pb.DeregisterResponse), nil
+}
+
+// Register ...
+func (s *ServerEndpoints) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+	_, resp, err := s.RegisterEndpoint.ServeGRPC(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*pb.RegisterResponse), nil
 }
 
 // User ...
@@ -42,11 +53,11 @@ func (s *ServerEndpoints) User(ctx context.Context, req *pb.UserRequest) (*pb.Us
 	return resp.(*pb.UserResponse), nil
 }
 
-// Vote ...
-func (s *ServerEndpoints) Vote(ctx context.Context, req *pb.VoteRequest) (*pb.VoteResponse, error) {
-	_, resp, err := s.VoteEndpoint.ServeGRPC(ctx, req)
+// Verify ...
+func (s *ServerEndpoints) Verify(ctx context.Context, req *pb.VerifyRequest) (*pb.VerifyResponse, error) {
+	_, resp, err := s.VerifyEndpoint.ServeGRPC(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	return resp.(*pb.VoteResponse), nil
+	return resp.(*pb.VerifyResponse), nil
 }
