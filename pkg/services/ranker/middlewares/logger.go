@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"os"
 	"time"
 
 	"github.com/chancegraff/project-news/internal/models"
@@ -16,9 +15,8 @@ type LoggingMiddleware struct {
 }
 
 // MakeLoggingMiggleware ...
-func MakeLoggingMiggleware() service.Middleware {
+func MakeLoggingMiggleware(logger log.Logger) service.Middleware {
 	return func(next service.Service) service.Service {
-		logger := log.NewLogfmtLogger(os.Stderr)
 		return &LoggingMiddleware{
 			next,
 			logger,

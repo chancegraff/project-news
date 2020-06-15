@@ -3,12 +3,14 @@ package server
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
 	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/services/ranker/endpoints"
+	"github.com/chancegraff/project-news/pkg/services/ranker/server/routes"
+	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/log/level"
 )
 
 // HTTP ...
@@ -20,26 +22,26 @@ type HTTP struct {
 }
 
 // Start will begin the HTTP server
-func (h *HTTP) Start(parent context.Context) error {
+func (h *HTTP) Start(parent context.Context, logger log.Logger) error {
 	_, cancel := context.WithCancel(parent)
-	log.Printf("Server started at %s", h.address)
+	level.Info(logger).Log("msg", "service started")
 	err := h.server.ListenAndServe()
 	cancel()
 	return err
 }
 
 // Stop will stop the HTTP server
-func (h *HTTP) Stop(parent context.Context) error {
-	log.Printf("HTTP stopped")
+func (h *HTTP) Stop(parent context.Context, logger log.Logger) error {
+	level.Info(logger).Log("msg", "service stopped")
 	return h.server.Shutdown(parent)
 }
 
 // NewMux will create a muxer with the routes registered
 func (h *HTTP) NewMux() *http.ServeMux {
 	mux := http.NewServeMux()
-	mux = h.MuxArticles(mux)
-	mux = h.MuxUser(mux)
-	mux = h.MuxVote(mux)
+	mux = routes.ArticlesHTTP(h.endpoints, mux)
+	mux = routes.UserHTTP(h.endpoints, mux)
+	mux = routes.VoteHTTP(h.endpoints, mux)
 	return mux
 }
 

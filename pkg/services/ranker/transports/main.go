@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-// EncodeResponse ...
-func EncodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+// EncodeHTTPResponse ...
+func EncodeHTTPResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	return json.NewEncoder(w).Encode(response)
 }

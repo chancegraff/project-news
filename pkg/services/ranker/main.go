@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/services/ranker/endpoints"
@@ -9,6 +10,7 @@ import (
 	"github.com/chancegraff/project-news/pkg/services/ranker/middlewares"
 	"github.com/chancegraff/project-news/pkg/services/ranker/server"
 	"github.com/chancegraff/project-news/pkg/services/ranker/service"
+	"github.com/go-kit/kit/log"
 	_ "github.com/joho/godotenv/autoload" // Autoload environment variables from file
 )
 
@@ -27,15 +29,31 @@ func main() {
 
 	// Setup the service
 	svc := service.NewService(&mgr)
-	svc = middlewares.BindService(svc)
-	endpoints := endpoints.NewEndpoints(svc)
 
-	// Create the server
-	server := server.NewHTTPServer(endpoints)
-	defer server.Stop(ctx)
+	// Create logger
+	logger := log.NewLogfmtLogger(os.Stderr)
+	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
+	logger = log.With(logger, "caller", log.DefaultCaller)
+
+	// Bind middleware
+	svc = middlewares.BindService(logger, svc)
+
+	// Create endpoints
+	end := endpoints.NewEndpoints(svc)
+
+	// Create RPC server
+	srv := server.NewRPCServer(end)
+	defer srv.Stop(ctx, logger)
 
 	// Start server
-	go server.Start(ctx)
+	go srv.Start(ctx, logger)
+
+	// // Create the server
+	// srv := server.NewHTTPServer(endpoints)
+	// defer srv.Stop(ctx, logger)
+
+	// // Start server
+	// go srv.Start(ctx, logger)
 
 	// Bind until exit
 	<-*done
