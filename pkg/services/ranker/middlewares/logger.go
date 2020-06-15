@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/chancegraff/project-news/internal/models"
@@ -30,8 +31,8 @@ func (mw *LoggingMiddleware) Articles(articleIDs []string) (output []models.Arti
 		mw.logger.Log(
 			"service", "ranker",
 			"method", "articles",
-			"articleIDs", articleIDs,
-			"output", output,
+			"articleIDs", fmt.Sprint(articleIDs),
+			"output", fmt.Sprint(output),
 			"err", err,
 			"took", time.Since(begin),
 		)
@@ -46,8 +47,8 @@ func (mw *LoggingMiddleware) User(userID string) (output models.UserVotes, err e
 		mw.logger.Log(
 			"service", "ranker",
 			"method", "user",
-			"userID", userID,
-			"output", output,
+			"userID", fmt.Sprint(userID),
+			"output", fmt.Sprint(output),
 			"err", err,
 			"took", time.Since(begin),
 		)
@@ -62,9 +63,9 @@ func (mw *LoggingMiddleware) Vote(articleID, userID string) (output models.Artic
 		mw.logger.Log(
 			"service", "ranker",
 			"method", "articles",
-			"articleID", articleID,
-			"userID", userID,
-			"output", output,
+			"articleID", fmt.Sprint(articleID),
+			"userID", fmt.Sprint(userID),
+			"output", fmt.Sprint(output),
 			"err", err,
 			"took", time.Since(begin),
 		)

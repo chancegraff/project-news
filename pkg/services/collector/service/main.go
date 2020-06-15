@@ -1,9 +1,15 @@
 package service
 
 import (
+	"context"
+	"time"
+
 	"github.com/chancegraff/project-news/internal/models"
+	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/services/collector/manager"
-	"github.com/go-kit/kit/endpoint"
+	"google.golang.org/grpc"
+
+	pb "github.com/chancegraff/project-news/api/ranker"
 )
 
 // Service implements the collector interface
@@ -13,13 +19,22 @@ type Service interface {
 }
 
 type service struct {
-	manager          *manager.Manager
-	ArticlesEndpoint endpoint.Endpoint
+	Manager                 *manager.Manager
+	RankerServiceAddress    string
+	RankerServiceConnection *grpc.ClientConn
+	RankerService           pb.RankerServiceClient
 }
 
 // NewService instantiates the service with a connection to the database
-func NewService(manager *manager.Manager) Service {
-	return &service{manager: manager}
+func NewService(ctx context.Context, manager *manager.Manager) Service {
+	address := utils.GetRankerAddress()
+	connection, err := grpc.DialContext(ctx, address,
+		grpc.WithInsecure(),
+		grpc.WithTimeout(time.Second*3))
+	if err != nil {
+		panic(err)
+	}
+	return &service{Manager: manager, RankerServiceConnection: connection, RankerService: pb.NewRankerServiceClient(connection)}
 }
 
 // Middleware is a chainable middleware for Service

@@ -24,7 +24,7 @@ func main() {
 	mgr := manager.NewManager()
 
 	// Setup the endpoints
-	svc := service.NewService(&mgr)
+	svc := service.NewService(ctx, &mgr)
 	svc = middlewares.BindService(svc)
 	endpoints := endpoints.NewEndpoints(svc)
 

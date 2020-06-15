@@ -1,13 +1,15 @@
 package service
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"sort"
 	"strconv"
 
 	"github.com/chancegraff/project-news/internal/models"
-	"github.com/chancegraff/project-news/pkg/services/collector/transports"
+
+	pb "github.com/chancegraff/project-news/api/ranker"
 )
 
 // All will return articles from the database with their rank
@@ -15,7 +17,7 @@ func (s *service) All(offset int) ([]models.Article, error) {
 	log.Println("All service called")
 
 	// Get articles
-	articles, err := s.manager.List(offset, 20)
+	articles, err := s.Manager.List(offset, 20)
 	if err != nil {
 		return nil, err
 	}
@@ -27,12 +29,11 @@ func (s *service) All(offset int) ([]models.Article, error) {
 	}
 
 	// Call ranker service
-	log.Println(s.Articles)
-	response, err := s.Articles(nil, transports.ArticlesRequest{ArticleIDs: articleIDs})
+	response, err := s.RankerService.Articles(context.Background(), &pb.ArticlesRequest{ArticleIDs: articleIDs})
 	if err != nil {
 		return nil, err
 	}
-	articleVotes := response.(transports.ArticlesResponse).Articles
+	articleVotes := response.Articles
 
 	// Put articles into order
 	sort.Slice(articles, func(i, j int) bool {
