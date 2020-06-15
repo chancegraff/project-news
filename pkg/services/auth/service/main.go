@@ -1,10 +1,8 @@
 package service
 
 import (
-	"context"
-
-	"github.com/chancegraff/project-news/internal/db"
 	"github.com/chancegraff/project-news/internal/models"
+	"github.com/chancegraff/project-news/pkg/services/auth/manager"
 )
 
 // Service implements the collector interface
@@ -16,13 +14,13 @@ type Service interface {
 }
 
 type service struct {
-	Store *db.Store
+	Manager *manager.Manager
 }
 
 // NewService instantiates the service with a connection to the database
-func NewService(ctx context.Context, store *db.Store) Service {
+func NewService(mgr *manager.Manager) Service {
 	return &service{
-		Store: store,
+		Manager: mgr,
 	}
 }
 

@@ -1,21 +1,27 @@
 package service
 
 import (
+	"time"
+
 	"github.com/chancegraff/project-news/internal/models"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // Verify will take an email and password and verify that it matches a record in the database
 func (s *service) Verify(email string, password string) (models.User, error) {
-	// Get user from database
-	var user models.User
-	err := s.Store.Database.Where("email = ?", email).First(&user).Error
+	// Get user
+	user, err := s.Manager.FindByEmail(email)
 	if err != nil {
 		return user, err
 	}
 
-	// Verify passwords
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	// Verify password
+	user, err = s.Manager.VerifyPassword(user, password)
+	if err != nil {
+		return user, err
+	}
+
+	// Add verification timestamp
+	user, err = s.Manager.AddVerification(user, time.Now())
 	if err != nil {
 		return user, err
 	}

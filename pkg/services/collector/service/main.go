@@ -27,14 +27,18 @@ type service struct {
 
 // NewService instantiates the service with a connection to the database
 func NewService(ctx context.Context, manager *manager.Manager) Service {
-	address := utils.GetRankerAddress()
-	connection, err := grpc.DialContext(ctx, address,
+	rankerAddress := utils.GetRankerAddress()
+	rankerConnection, err := grpc.DialContext(ctx, rankerAddress,
 		grpc.WithInsecure(),
 		grpc.WithTimeout(time.Second*3))
 	if err != nil {
 		panic(err)
 	}
-	return &service{Manager: manager, RankerServiceConnection: connection, RankerService: pb.NewRankerServiceClient(connection)}
+	return &service{
+		Manager:                 manager,
+		RankerServiceConnection: rankerConnection,
+		RankerService:           pb.NewRankerServiceClient(rankerConnection),
+	}
 }
 
 // Middleware is a chainable middleware for Service

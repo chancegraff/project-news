@@ -7,14 +7,13 @@ import (
 // Deregister will take a user ID, null its verified_at column, and return that user
 func (s *service) Deregister(userID string) (models.User, error) {
 	// Search for existing user
-	var user models.User
-	err := s.Store.Database.First(&user, userID).Error
+	user, err := s.Manager.FindByID(userID)
 	if err != nil {
 		return user, err
 	}
 
 	// Remove verification timestamp
-	err = s.Store.Database.Model(&user).Update("verified_at", nil).Error
+	user, err = s.Manager.RemoveVerification(user)
 	if err != nil {
 		return user, err
 	}
