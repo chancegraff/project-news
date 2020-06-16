@@ -6,7 +6,11 @@ import "github.com/chancegraff/project-news/internal/models"
 func (a *Manager) Batch(articles []models.Article) []models.Article {
 	buffer, result := articles, make([]models.Article, len(articles))
 	for _, article := range buffer {
-		result = append(result, a.FirstOrCreate(article))
+		a, err := a.FirstOrCreate(article)
+		if err != nil {
+			break
+		}
+		result = append(result, a)
 	}
 	return result
 }

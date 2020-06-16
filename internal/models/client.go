@@ -2,15 +2,13 @@ package models
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 // Client is a representation of a unique machine in the database
 type Client struct {
 	Hash      string    `json:"hash" gorm:"unique_index"`
 	UserID    string    `json:"user"`
-	Secret    uuid.UUID `json:"secret"`
+	IP        string    `json:"ip"`
 	ExpiredAt time.Time `json:"expiredAt"`
 	Base
 }

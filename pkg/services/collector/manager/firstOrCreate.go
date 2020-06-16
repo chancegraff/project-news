@@ -5,8 +5,11 @@ import (
 )
 
 // FirstOrCreate will create a new record or find an existing record and return either
-func (a *Manager) FirstOrCreate(article models.Article) models.Article {
+func (a *Manager) FirstOrCreate(article models.Article) (models.Article, error) {
 	buffer := article
-	a.Store.Database.Where(models.Article{URL: article.URL}).FirstOrCreate(&buffer)
-	return buffer
+	err := a.Store.Database.Where(models.Article{URL: article.URL}).FirstOrCreate(&buffer).Error
+	if err != nil {
+		return buffer, err
+	}
+	return buffer, nil
 }
