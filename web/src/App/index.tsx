@@ -56,8 +56,8 @@ const setLocalAuth = (hash: IAuth) => {
   }
 };
 
-const articlesURL = "/api/v1/articles";
-const generateURL = "/api/v1/token/generate";
+const articlesURL = "http://localhost:8000/api/v1/articles";
+const generateURL = "http://localhost:8000/api/v1/token/generate";
 
 const identifiers: IIdentifiers = {
   software: navigator.platform,

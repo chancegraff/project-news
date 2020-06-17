@@ -1,4 +1,4 @@
-package main
+package gateway
 
 import (
 	"context"
@@ -13,7 +13,8 @@ import (
 	_ "github.com/joho/godotenv/autoload" // Autoload environment variables from file
 )
 
-func main() {
+// Run will handle the lifecycle of the gateway
+func Run() {
 	// Bind resources
 	ctx, cancel := context.WithCancel(context.Background())
 	done := utils.GetDoneChannel()
@@ -26,6 +27,7 @@ func main() {
 	prx, err := proxy.NewProxy(ctx, lgr)
 	if err != nil {
 		log.Fatal("Failed to create proxies", err)
+		cancel()
 		return
 	}
 

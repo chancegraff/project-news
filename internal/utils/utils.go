@@ -23,8 +23,7 @@ func Tomorrow() time.Time {
 // Logger will return a gokit logger with default params
 func Logger(serviceName string) log.Logger {
 	lgr := log.NewLogfmtLogger(os.Stderr)
-	lgr = log.With(lgr, "ts", log.DefaultTimestampUTC)
-	lgr = log.With(lgr, "caller", log.DefaultCaller)
-	lgr = log.With(lgr, "service", serviceName)
+	lgr = log.WithPrefix(lgr, "ts", log.DefaultTimestampUTC)
+	lgr = log.WithPrefix(lgr, "service", serviceName)
 	return lgr
 }

@@ -1,4 +1,4 @@
-package main
+package services
 
 import (
 	"github.com/chancegraff/project-news/internal/utils"
@@ -8,7 +8,8 @@ import (
 	"github.com/chancegraff/project-news/pkg/services/token"
 )
 
-func main() {
+// Run will handle the lifecycle for the services
+func Run() {
 	done := utils.GetDoneChannel()
 
 	go auth.Run()
