@@ -8,11 +8,10 @@ import (
 )
 
 // All ...
-func (mw *LoggingMiddleware) All(offset int) (output []*pbc.Article, err error) {
+func (mw *Middleware) All(offset int) (output []*pbc.Article, err error) {
 	defer func(begin time.Time) {
 		mw.logger.Log(
-			"service", "ranker",
-			"method", "articles",
+			"method", "All",
 			"offset", fmt.Sprint(offset),
 			"output", fmt.Sprint(output),
 			"err", err,

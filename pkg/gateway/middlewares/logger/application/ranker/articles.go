@@ -8,11 +8,10 @@ import (
 )
 
 // Articles ...
-func (mw *LoggingMiddleware) Articles(articleIDs []string) (output []*pbr.ArticleVotes, err error) {
+func (mw *Middleware) Articles(articleIDs []string) (output []*pbr.ArticleVotes, err error) {
 	defer func(begin time.Time) {
 		mw.logger.Log(
-			"service", "ranker",
-			"method", "articles",
+			"method", "Articles",
 			"articleIDs", fmt.Sprint(articleIDs),
 			"output", fmt.Sprint(output),
 			"err", err,

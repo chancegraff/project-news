@@ -8,11 +8,10 @@ import (
 )
 
 // Get ...
-func (mw *LoggingMiddleware) Get(id int) (output *pbc.Article, err error) {
+func (mw *Middleware) Get(id int) (output *pbc.Article, err error) {
 	defer func(begin time.Time) {
 		mw.logger.Log(
-			"service", "ranker",
-			"method", "articles",
+			"method", "Get",
 			"id", fmt.Sprint(id),
 			"output", fmt.Sprint(output),
 			"err", err,

@@ -7,18 +7,17 @@ import (
 	pba "github.com/chancegraff/project-news/api/auth"
 )
 
-// Verify ...
-func (mw *LoggingMiddleware) Verify(email string, password string) (output *pba.User, err error) {
+// User ...
+func (mw *Middleware) User(userID string) (output *pba.User, err error) {
 	defer func(begin time.Time) {
 		mw.logger.Log(
-			"service", "ranker",
-			"method", "articles",
-			"email", fmt.Sprint(email),
+			"method", "User",
+			"userID", fmt.Sprint(userID),
 			"output", fmt.Sprint(output),
 			"err", err,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	output, err = mw.next.Verify(email, password)
+	output, err = mw.next.User(userID)
 	return
 }

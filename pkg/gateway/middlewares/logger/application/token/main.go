@@ -5,18 +5,18 @@ import (
 	"github.com/go-kit/kit/log"
 )
 
-// LoggingMiddleware ...
-type LoggingMiddleware struct {
+// Middleware ...
+type Middleware struct {
 	next   token.Service
 	logger log.Logger
 }
 
-// MakeLoggingMiggleware ...
-func MakeLoggingMiggleware(logger log.Logger) token.Middleware {
+// MakeMiddleware ...
+func MakeMiddleware(logger log.Logger) token.Middleware {
 	return func(next token.Service) token.Service {
-		return &LoggingMiddleware{
+		return &Middleware{
 			next,
-			logger,
+			log.With(logger, "svc", "token"),
 		}
 	}
 }

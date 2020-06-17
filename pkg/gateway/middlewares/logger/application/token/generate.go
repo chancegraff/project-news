@@ -7,12 +7,11 @@ import (
 	pbt "github.com/chancegraff/project-news/api/token"
 )
 
-// Verify ...
-func (mw *LoggingMiddleware) Verify(identifiers *pbt.Identifiers, client *pbt.Client) (output string, err error) {
+// Generate ...
+func (mw *Middleware) Generate(identifiers *pbt.Identifiers, client *pbt.Client) (output string, err error) {
 	defer func(begin time.Time) {
 		mw.logger.Log(
-			"service", "ranker",
-			"method", "articles",
+			"method", "Generate",
 			"identifiers", fmt.Sprint(identifiers),
 			"client", fmt.Sprint(client),
 			"output", fmt.Sprint(output),
@@ -20,6 +19,6 @@ func (mw *LoggingMiddleware) Verify(identifiers *pbt.Identifiers, client *pbt.Cl
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	output, err = mw.next.Verify(identifiers, client)
+	output, err = mw.next.Generate(identifiers, client)
 	return
 }

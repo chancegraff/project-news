@@ -7,18 +7,17 @@ import (
 	pba "github.com/chancegraff/project-news/api/auth"
 )
 
-// User ...
-func (mw *LoggingMiddleware) User(userID string) (output *pba.User, err error) {
+// Deregister ...
+func (mw *Middleware) Deregister(userID string) (output *pba.User, err error) {
 	defer func(begin time.Time) {
 		mw.logger.Log(
-			"service", "ranker",
-			"method", "articles",
+			"method", "Deregister",
 			"userID", fmt.Sprint(userID),
 			"output", fmt.Sprint(output),
 			"err", err,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	output, err = mw.next.User(userID)
+	output, err = mw.next.Deregister(userID)
 	return
 }

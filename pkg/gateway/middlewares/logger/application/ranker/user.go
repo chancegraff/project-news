@@ -8,11 +8,10 @@ import (
 )
 
 // User ...
-func (mw *LoggingMiddleware) User(userID string) (output *pbr.UserVotes, err error) {
+func (mw *Middleware) User(userID string) (output *pbr.UserVotes, err error) {
 	defer func(begin time.Time) {
 		mw.logger.Log(
-			"service", "ranker",
-			"method", "articles",
+			"method", "User",
 			"userID", fmt.Sprint(userID),
 			"output", fmt.Sprint(output),
 			"err", err,
