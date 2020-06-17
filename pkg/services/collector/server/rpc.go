@@ -46,7 +46,7 @@ func (r *RPC) Stop(parent context.Context, logger log.Logger) error {
 // NewRPCServer ...
 func NewRPCServer(e endpoints.Endpoints) RPC {
 	// Create the address
-	port := utils.GetRankerPort()
+	port := utils.GetCollectorPort()
 	address := fmt.Sprint(":", port)
 
 	// Bind a listener

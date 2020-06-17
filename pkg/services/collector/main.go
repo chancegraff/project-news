@@ -1,4 +1,4 @@
-package main
+package collector
 
 import (
 	"context"
@@ -15,9 +15,8 @@ import (
 	_ "github.com/joho/godotenv/autoload" // Autoload environment variables from file
 )
 
-// Runs locally at 7999 and on the server at:
-// http://api.project-news-voter.app.localspace:7999/
-func main() {
+// Run locally at 7999 and on the server at http://api.project-news-voter.app.localspace:7999/
+func Run() {
 	// Bind resources
 	ctx, cancel := context.WithCancel(context.Background())
 	done := utils.GetDoneChannel()
@@ -41,15 +40,15 @@ func main() {
 	end := endpoints.NewEndpoints(svc)
 
 	// Create Collector server
-	collector := vendors.NewServer(&mgr)
-	defer collector.Stop(ctx)
+	clctr := vendors.NewServer(&mgr)
+	defer clctr.Stop(ctx)
 
 	// Create RPC server
 	srv := server.NewRPCServer(end)
 	defer srv.Stop(ctx, logger)
 
 	// Start servers
-	go collector.Start(ctx)
+	go clctr.Start(ctx)
 	go srv.Start(ctx, logger)
 
 	// Bind until exit

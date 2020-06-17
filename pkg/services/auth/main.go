@@ -1,4 +1,4 @@
-package main
+package auth
 
 import (
 	"context"
@@ -14,9 +14,8 @@ import (
 	_ "github.com/joho/godotenv/autoload" // Autoload environment variables from file
 )
 
-// Runs locally at 7997 and on the server at:
-// http://api.project-news-voter.app.localspace:7997/
-func main() {
+// Run locally at 7997 and on the server at http://api.project-news-voter.app.localspace:7997/
+func Run() {
 	// Bind resources
 	ctx, cancel := context.WithCancel(context.Background())
 	done := utils.GetDoneChannel()
