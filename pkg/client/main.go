@@ -32,7 +32,7 @@ func Run() {
 	port := utils.GetClientPort()
 	address := fmt.Sprintf(":%v", port)
 	srv := &http.Server{
-		Handler:      Policy(rt),
+		Handler:      utils.CORSPolicy(rt),
 		Addr:         address,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,

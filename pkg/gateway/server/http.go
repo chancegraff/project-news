@@ -47,18 +47,9 @@ func NewServer(e endpoints.Endpoints, lgr log.Logger) HTTP {
 	endpoints := http.NewServerEndpoints(e)
 	handler := endpoints.Route()
 
-	// handler.HandleFunc("/", func(rw web.ResponseWriter, rq *web.Request) {
-	// 	handler.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
-	// 		tpl, err1 := route.GetPathTemplate()
-	// 		met, err2 := route.GetMethods()
-	// 		level.Info(lgr).Log("tpl", tpl, "err1", err1, "met", met, "err2", err2)
-	// 		return nil
-	// 	})
-	// })
-
 	// Bind a listener
 	server := &web.Server{
-		Handler:      handler,
+		Handler:      utils.CORSPolicy(handler),
 		Addr:         address,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,

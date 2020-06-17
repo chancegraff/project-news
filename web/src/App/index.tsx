@@ -69,6 +69,13 @@ const identifiers: IIdentifiers = {
   pixels: window.screen.pixelDepth.toString(),
 };
 
+const client = {
+  hash: "",
+  userId: "",
+  ip: "",
+  expiredAt: "",
+};
+
 const App = () => {
   const [articles, setArticles] = useState<Array<IArticle>>([]);
   const [auth, setStateAuth] = useState<IAuth>();
@@ -89,7 +96,10 @@ const App = () => {
       } else {
         const generateOptions = {
           method: "POST",
-          body: JSON.stringify(identifiers),
+          body: JSON.stringify({
+            identifiers,
+            client,
+          }),
         };
 
         const rsp = await fetch(generateURL, generateOptions);
