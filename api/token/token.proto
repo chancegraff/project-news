@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package token;
+
+option go_package = "api/token";
+
+// TokenService
+
+service TokenService {
+    rpc Generate(GenerateRequest) returns (GenerateResponse) {}
+	rpc Verify(VerifyRequest) returns (VerifyResponse) {}
+}
+
+// Models
+
+message Client {
+    string hash = 1;
+    string userID = 2;
+    string ip = 3;
+    string expiredAt = 4;
+    int32 id = 5;
+    string createdAt = 6;
+    string updatedAt = 7;
+}
+
+message Identifiers {
+    string software = 1;
+    string browser = 2;
+    string language = 3;
+    string width = 4;
+    string height = 5;
+    string colors = 6;
+    string pixels = 7;
+}
+
+// Transports
+
+message GenerateRequest {
+    Identifiers identifiers = 1;
+    Client client = 2;
+}
+
+message GenerateResponse {
+    string hash = 1;
+    string err = 2;
+}
+
+message VerifyRequest {
+    Identifiers identifiers = 1;
+    Client client = 2;
+}
+
+message VerifyResponse {
+    string hash = 1;
+    string err = 2;
+}

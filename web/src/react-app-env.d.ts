@@ -6,16 +6,16 @@ declare module '*.scss' {
 }
 
 interface IArticle {
-    ID: number;
-    Title: string;
-    URL: string;
-    Thumbnail: string;
-    PublishedAt: string;
+    id: number;
+    title: string;
+    url: string;
+    thumbnail: string;
+    publishedAt: string;
 }
 
 interface IUser {
-    ID: number;
-    Email: string;
+    id: number;
+    email: string;
 }
 
 interface Credentials {

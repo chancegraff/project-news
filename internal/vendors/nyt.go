@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/chancegraff/project-news/pkg/models"
+	"github.com/chancegraff/project-news/internal/vendors/models"
 )
 
 var newYorkTimesURL = "https://api.nytimes.com/svc/topstories/v2/politics.json?api-key="

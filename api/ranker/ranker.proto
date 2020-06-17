@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package ranker;
+
+option go_package = "api/ranker";
+
+// RankerService
+
+service RankerService {
+    rpc Articles(ArticlesRequest) returns (ArticlesResponse) {}
+    rpc User(UserRequest) returns (UserResponse) {}
+    rpc Vote(VoteRequest) returns (VoteResponse) {}
+}
+
+// Models
+
+message Vote {
+    string userID = 1;
+    string articleID = 2;
+    int32 id = 3;
+    string createdAt = 4;
+    string updatedAt = 5;
+}
+
+message UserVotes {
+    string userID = 1;
+    repeated Vote votes = 2;
+}
+
+message ArticleVotes {
+    string articleID = 1;
+    int32 votes = 2;
+}
+
+// Article transporters
+
+message ArticlesRequest {
+    repeated string articleIDs = 1;
+}
+
+message ArticlesResponse {
+    repeated ArticleVotes articles = 1;
+    string err = 2;
+}
+
+// User transporters
+
+message UserRequest {
+    string userID = 1;
+}
+
+message UserResponse {
+    UserVotes user = 1;
+    string err = 2;
+}
+
+// Vote transporters
+
+message VoteRequest {
+    string articleID = 1;
+    string userID = 2;
+}
+
+message VoteResponse {
+    ArticleVotes article = 1;
+    string err = 2;
+}

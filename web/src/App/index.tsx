@@ -56,8 +56,13 @@ const setLocalAuth = (hash: IAuth) => {
   }
 };
 
-const articlesURL = "/api/v1/articles";
-const generateURL = "/api/v1/token/generate";
+const protocol = "http";
+const apiURL = process.env.REACT_APP_API_URL;
+const apiPort = process.env.REACT_APP_API_PORT;
+const articlesPath = "api/v1/collector/all";
+const articlesURL = `${protocol}://${apiURL}:${apiPort}/${articlesPath}`;
+const generatePath = "api/v1/token/generate";
+const generateURL = `${protocol}://${apiURL}:${apiPort}/${generatePath}`;
 
 const identifiers: IIdentifiers = {
   software: navigator.platform,
@@ -67,6 +72,13 @@ const identifiers: IIdentifiers = {
   height: window.screen.height.toString(),
   colors: window.screen.colorDepth.toString(),
   pixels: window.screen.pixelDepth.toString(),
+};
+
+const client = {
+  hash: "",
+  userId: "",
+  ip: "",
+  expiredAt: "",
 };
 
 const App = () => {
@@ -89,7 +101,10 @@ const App = () => {
       } else {
         const generateOptions = {
           method: "POST",
-          body: JSON.stringify(identifiers),
+          body: JSON.stringify({
+            identifiers,
+            client,
+          }),
         };
 
         const rsp = await fetch(generateURL, generateOptions);
@@ -111,13 +126,17 @@ const App = () => {
       if(auth && auth.hash && !articles.length) {
         console.log('Effecting')
         const rsp = await fetch(articlesURL, {
+          method: "POST",
           headers: {
             "X-Token-Auth": `Bearer ${auth.hash}`
-          }
+          },
+          body: JSON.stringify({
+            offset: 0,
+          }),
         });
         const js = await rsp.json();
 
-        setArticles(js);
+        setArticles(js.articles);
       }
     };
 
@@ -136,7 +155,7 @@ const App = () => {
     <div className={styles.App}>
       <div className={styles.ArticleList}>
         {articles.map((article) => (
-          <Article key={article.ID} article={article} user={user} />
+          <Article key={article.id} article={article} user={user} />
         ))}
       </div>
       <div className={styles.AccountBubble}>

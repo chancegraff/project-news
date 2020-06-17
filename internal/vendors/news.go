@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/chancegraff/project-news/pkg/models"
+	"github.com/chancegraff/project-news/internal/vendors/models"
 )
 
 var newsURL = "https://newsapi.org/v2/everything?q=politics&domains=msnbc.com,cnn.com,washingtonpost.com&sortBy=publishedAt&language=en&apiKey="

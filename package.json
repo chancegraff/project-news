@@ -1,11 +1,11 @@
 {
-  "engines": {
-    "node": "10.x",
-    "npm": "6.x"
-  },
-  "cacheDirectories": ["web/node_modules"],
-  "scripts": {
-    "heroku-prebuild": "npm install --prefix web",
-    "build": "npm run build --prefix web"
+    "engines": {
+      "node": "10.x",
+      "npm": "6.x"
+    },
+    "cacheDirectories": ["web/node_modules"],
+    "scripts": {
+      "heroku-prebuild": "npm install --prefix web",
+      "build": "npm run build --prefix web"
+    }
   }
-}

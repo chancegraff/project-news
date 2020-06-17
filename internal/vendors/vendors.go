@@ -1,7 +1,7 @@
 package vendors
 
 import (
-	"github.com/chancegraff/project-news/pkg/models"
+	"github.com/chancegraff/project-news/internal/models"
 )
 
 func getNytArticles() ([]models.Article, error) {
@@ -39,7 +39,7 @@ func getNewsArticles() ([]models.Article, error) {
 }
 
 // Get returns an array of articles
-func Get() *[]models.Article {
+func Get() []models.Article {
 	nyt, err := getNytArticles()
 	if err != nil {
 		panic(err)
@@ -52,5 +52,5 @@ func Get() *[]models.Article {
 
 	articles := append(nyt, news...)
 
-	return &articles
+	return articles
 }

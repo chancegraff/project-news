@@ -46,7 +46,7 @@ const Account: React.FC<{
     const options = {
       method: "POST",
       body: JSON.stringify({
-        user: user?.ID,
+        user: user?.id,
       }),
     };
     const res = await fetch(deregisterURL, options);
@@ -127,7 +127,7 @@ const Account: React.FC<{
             {
               onMouseOver: handleMouseOver,
             },
-            <span className={styles.AccountEmail}>{user?.Email}</span>,
+            <span className={styles.AccountEmail}>{user?.email}</span>,
           );
         }
         case "over": {

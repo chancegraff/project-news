@@ -1,111 +1,29 @@
 package utils
 
 import (
-	"bytes"
-	"crypto/hmac"
-	"crypto/sha256"
-	"encoding/base64"
-	"encoding/gob"
-	"encoding/hex"
-	"encoding/json"
-	"net/http"
 	"os"
-	"reflect"
+	"os/signal"
+	"time"
+
+	"github.com/go-kit/kit/log"
 )
 
-// GetIPFromRequest ...
-func GetIPFromRequest(rq *http.Request) string {
-	forwarded := rq.Header.Get("X-FORWARDED-FOR")
-	if forwarded != "" {
-		return forwarded
-	}
-	return rq.RemoteAddr
+// GetDoneChannel creates a new channel to listen for done signals on
+func GetDoneChannel() *chan os.Signal {
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, os.Interrupt)
+	return &done
 }
 
-// GetArrayFromStruct ...
-func GetArrayFromStruct(itf interface{}) []interface{} {
-	values := reflect.ValueOf(itf)
-	ary := make([]interface{}, values.NumField())
-	for i := 0; i < values.NumField(); i++ {
-		ary[i] = values.Field(i).Interface()
-	}
-	return ary
+// Tomorrow will return a time.Time instance for tomorrow
+func Tomorrow() time.Time {
+	return time.Now().AddDate(0, 0, 1)
 }
 
-// GetHashFromArray takes an array of strings and returns a unique hash
-func GetHashFromArray(identifiers []interface{}) (*string, error) {
-	mIdentifiers, err := json.Marshal(identifiers)
-	if err != nil {
-		return nil, err
-	}
-
-	hash := base64.StdEncoding.EncodeToString(mIdentifiers)
-
-	return &hash, nil
-}
-
-// GetArrayHashFromStruct ...
-func GetArrayHashFromStruct(identifier interface{}) (*string, error) {
-	array := GetArrayFromStruct(identifier)
-	return GetHashFromArray(array)
-}
-
-// GetJSONHashFromStruct ...
-func GetJSONHashFromStruct(identifiers interface{}) (*string, error) {
-	mIdentifiers, err := json.Marshal(identifiers)
-	if err != nil {
-		return nil, err
-	}
-
-	hash := base64.StdEncoding.EncodeToString(mIdentifiers)
-
-	return &hash, nil
-}
-
-// EncodeArray takes an array and returns it encoded using sha256
-func EncodeArray(identifiers []interface{}) ([]byte, error) {
-	sha := sha256.New()
-
-	for _, value := range identifiers {
-		v, err := getBytes(value)
-		if err != nil {
-			return nil, err
-		}
-
-		sha.Write(v)
-	}
-
-	return sha.Sum(nil), nil
-}
-
-func getBytes(key interface{}) ([]byte, error) {
-	var buf bytes.Buffer
-	enc := gob.NewEncoder(&buf)
-	err := enc.Encode(key)
-	if err != nil {
-		return nil, err
-	}
-	return buf.Bytes(), nil
-
-}
-
-// EncodeStruct takes a struct and returns it encoded using sha256
-func EncodeStruct(identifiers interface{}) ([]byte, error) {
-	array := GetArrayFromStruct(identifiers)
-	return EncodeArray(array)
-}
-
-// HMACSHA256 ...
-func HMACSHA256(data []byte, secret string) string {
-	hm := hmac.New(sha256.New, []byte(secret))
-	hm.Write(data)
-	return hex.EncodeToString(hm.Sum(nil))
-}
-
-// GetEnv ...
-func GetEnv(key, fallback string) string {
-	if value, ok := os.LookupEnv(key); ok {
-		return value
-	}
-	return fallback
+// Logger will return a gokit logger with default params
+func Logger(serviceName string) log.Logger {
+	lgr := log.NewLogfmtLogger(os.Stderr)
+	lgr = log.WithPrefix(lgr, "ts", log.DefaultTimestampUTC)
+	lgr = log.WithPrefix(lgr, "service", serviceName)
+	return lgr
 }
