@@ -56,7 +56,7 @@ func Connect(connection *grpc.ClientConn) pba.AuthServiceClient {
 }
 
 // Start ...
-func (p proxy) Start(ctx context.Context) error {
+func (p *proxy) Start(ctx context.Context) error {
 	connection, err := Dial(ctx, p.Address)
 	if err != nil {
 		return err
@@ -67,6 +67,6 @@ func (p proxy) Start(ctx context.Context) error {
 }
 
 // Stop ...
-func (p proxy) Stop() error {
+func (p *proxy) Stop() error {
 	return p.Connection.Close()
 }

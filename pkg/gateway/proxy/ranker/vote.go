@@ -8,7 +8,7 @@ import (
 )
 
 // Vote ...
-func (p *proxy) Vote(articleID, userID string) (*pbr.ArticleVotes, error) {
+func (p proxy) Vote(articleID, userID string) (*pbr.ArticleVotes, error) {
 	voteResp, err := p.Client.Vote(context.Background(), &pbr.VoteRequest{ArticleID: articleID, UserID: userID})
 	if err != nil {
 		return nil, err

@@ -8,8 +8,8 @@ import (
 )
 
 // All ...
-func (p *proxy) All(offset int) ([]*pbc.Article, error) {
-	allResp, err := p.Client.All(context.Background(), &pbc.AllRequest{Offset: int32(offset)})
+func (p proxy) All(ctx context.Context, offset int) ([]*pbc.Article, error) {
+	allResp, err := p.Client.All(ctx, &pbc.AllRequest{Offset: int32(offset)})
 	if err != nil {
 		return nil, err
 	}

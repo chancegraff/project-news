@@ -23,7 +23,7 @@ func main() {
 	mdl := middlewares.NewMiddlewares(lgr)
 
 	// Create service proxies
-	prx, err := proxy.NewProxy(ctx)
+	prx, err := proxy.NewProxy(ctx, lgr)
 	if err != nil {
 		log.Fatal("Failed to create proxies", err)
 		return

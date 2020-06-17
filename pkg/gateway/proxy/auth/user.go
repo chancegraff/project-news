@@ -8,7 +8,7 @@ import (
 )
 
 // User ...
-func (p *proxy) User(userID string) (*pba.User, error) {
+func (p proxy) User(userID string) (*pba.User, error) {
 	userResp, err := p.Client.User(context.Background(), &pba.UserRequest{UserID: userID})
 	if err != nil {
 		return nil, err

@@ -8,7 +8,7 @@ import (
 )
 
 // Register ...
-func (p *proxy) Register(email string, password string) (*pba.User, error) {
+func (p proxy) Register(email string, password string) (*pba.User, error) {
 	registerResp, err := p.Client.Register(context.Background(), &pba.RegisterRequest{Email: email, Password: password})
 	if err != nil {
 		return nil, err

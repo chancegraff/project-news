@@ -14,7 +14,7 @@ import (
 func MakeAllEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*pbc.AllRequest)
-		articles, err := svc.Collector.All(int(req.Offset))
+		articles, err := svc.Collector.All(ctx, int(req.Offset))
 		if err != nil {
 			return pbc.AllResponse{
 				Articles: articles,

@@ -1,6 +1,7 @@
 package collector
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -8,7 +9,7 @@ import (
 )
 
 // All ...
-func (mw *Middleware) All(offset int) (output []*pbc.Article, err error) {
+func (mw *Middleware) All(ctx context.Context, offset int) (output []*pbc.Article, err error) {
 	defer func(begin time.Time) {
 		mw.logger.Log(
 			"method", "All",
@@ -18,6 +19,6 @@ func (mw *Middleware) All(offset int) (output []*pbc.Article, err error) {
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	output, err = mw.next.All(offset)
+	output, err = mw.next.All(ctx, offset)
 	return
 }

@@ -8,7 +8,7 @@ import (
 )
 
 // Get ...
-func (p *proxy) Get(id int) (*pbc.Article, error) {
+func (p proxy) Get(id int) (*pbc.Article, error) {
 	getResp, err := p.Client.Get(context.Background(), &pbc.GetRequest{Id: int32(id)})
 	if err != nil {
 		return nil, err

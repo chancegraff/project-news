@@ -1,6 +1,7 @@
 package collector
 
 import (
+	"context"
 	"fmt"
 	"sort"
 	"strconv"
@@ -9,9 +10,9 @@ import (
 )
 
 // All ...
-func (s *service) All(offset int) ([]*pbc.Article, error) {
+func (s *service) All(ctx context.Context, offset int) ([]*pbc.Article, error) {
 	// Call collector service
-	articles, err := s.Proxy.Collector.All(offset)
+	articles, err := s.Proxy.Collector.All(ctx, offset)
 	if err != nil {
 		return nil, err
 	}

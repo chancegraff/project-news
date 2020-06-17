@@ -8,7 +8,7 @@ import (
 )
 
 // Generate ...
-func (p *proxy) Generate(identifiers *pbt.Identifiers, client *pbt.Client) (string, error) {
+func (p proxy) Generate(identifiers *pbt.Identifiers, client *pbt.Client) (string, error) {
 	generateResp, err := p.Client.Generate(context.Background(), &pbt.GenerateRequest{Identifiers: identifiers, Client: client})
 	if err != nil {
 		return "", err

@@ -1,13 +1,15 @@
 package collector
 
 import (
+	"context"
+
 	pbc "github.com/chancegraff/project-news/api/collector"
 	"github.com/chancegraff/project-news/pkg/gateway/proxy"
 )
 
 // Service implements the collector interface
 type Service interface {
-	All(offset int) ([]*pbc.Article, error)
+	All(ctx context.Context, offset int) ([]*pbc.Article, error)
 	Get(id int) (*pbc.Article, error)
 }
 
