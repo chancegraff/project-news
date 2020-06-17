@@ -12,15 +12,21 @@ import (
 )
 
 func main() {
-	// Bind resources and create logger
+	// Bind resources
 	ctx, cancel := context.WithCancel(context.Background())
 	done := utils.GetDoneChannel()
-	lgr := utils.Logger("gateway")
 
-	// Create service with middlewares and endpoints
+	// Create logger and middlewares
+	lgr := utils.Logger("gateway")
+	mdl := middlewares.NewMiddlewares(lgr)
+
+	// Create service and bind to middleware
 	svc := service.NewService(ctx)
-	svc = middlewares.BindService(lgr, svc)
+	svc = mdl.BindService(svc)
+
+	// Create endpoints and bind to middleware
 	end := endpoints.NewEndpoints(svc)
+	end = mdl.BindEndpoints(end)
 
 	// Create server
 	srv := server.NewServer(end, lgr)
