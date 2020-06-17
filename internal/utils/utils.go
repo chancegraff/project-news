@@ -4,6 +4,8 @@ import (
 	"os"
 	"os/signal"
 	"time"
+
+	"github.com/go-kit/kit/log"
 )
 
 // GetDoneChannel creates a new channel to listen for done signals on
@@ -16,4 +18,13 @@ func GetDoneChannel() *chan os.Signal {
 // Tomorrow will return a time.Time instance for tomorrow
 func Tomorrow() time.Time {
 	return time.Now().AddDate(0, 0, 1)
+}
+
+// Logger will return a gokit logger with default params
+func Logger(serviceName string) log.Logger {
+	lgr := log.NewLogfmtLogger(os.Stderr)
+	lgr = log.With(lgr, "ts", log.DefaultTimestampUTC)
+	lgr = log.With(lgr, "caller", log.DefaultCaller)
+	lgr = log.With(lgr, "service", serviceName)
+	return lgr
 }
