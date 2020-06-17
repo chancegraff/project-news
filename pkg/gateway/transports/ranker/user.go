@@ -11,11 +11,11 @@ import (
 
 // DecodeUserRequest ...
 func DecodeUserRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request *pbr.UserRequest
-	if err := json.NewDecoder(r.Body).Decode(request); err != io.EOF && err != nil {
+	var request pbr.UserRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != io.EOF && err != nil {
 		return nil, err
 	}
-	return request, nil
+	return &request, nil
 }
 
 // EncodeUserResponse ...
