@@ -20,3 +20,6 @@ func NewEndpoints(s service.Service) Endpoints {
 		VoteEndpoint:     MakeVoteEndpoint(s),
 	}
 }
+
+// Middleware is a chainable middleware for Endpoints
+type Middleware func(Endpoints) Endpoints

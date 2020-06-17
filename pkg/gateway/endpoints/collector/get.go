@@ -12,7 +12,7 @@ import (
 
 // MakeGetEndpoint ...
 func MakeGetEndpoint(svc service.Service) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*pbc.GetRequest)
 		article, err := svc.Collector.Get(int(req.Id))
 		if err != nil {

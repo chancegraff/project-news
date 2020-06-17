@@ -12,7 +12,7 @@ import (
 
 // MakeVoteEndpoint ...
 func MakeVoteEndpoint(svc service.Service) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*pbr.VoteRequest)
 		article, err := svc.Ranker.Vote(req.ArticleID, req.UserID)
 		if err != nil {

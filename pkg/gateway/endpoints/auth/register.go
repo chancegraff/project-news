@@ -12,7 +12,7 @@ import (
 
 // MakeRegisterEndpoint ...
 func MakeRegisterEndpoint(svc service.Service) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*pba.RegisterRequest)
 		user, err := svc.Auth.Register(req.Email, req.Password)
 		if err != nil {

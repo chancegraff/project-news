@@ -12,7 +12,7 @@ import (
 
 // MakeGenerateEndpoint ...
 func MakeGenerateEndpoint(svc service.Service) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*pbt.GenerateRequest)
 		hash, err := svc.Token.Generate(req.Identifiers, req.Client)
 		if err != nil {

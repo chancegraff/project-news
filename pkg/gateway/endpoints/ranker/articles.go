@@ -12,7 +12,7 @@ import (
 
 // MakeArticlesEndpoint ...
 func MakeArticlesEndpoint(svc service.Service) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*pbr.ArticlesRequest)
 		articles, err := svc.Ranker.Articles(req.ArticleIDs)
 		if err != nil {

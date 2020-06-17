@@ -22,3 +22,6 @@ func NewEndpoints(s service.Service) Endpoints {
 		VerifyEndpoint:     MakeVerifyEndpoint(s),
 	}
 }
+
+// Middleware is a chainable middleware for Endpoints
+type Middleware func(Endpoints) Endpoints

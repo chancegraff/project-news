@@ -12,7 +12,7 @@ import (
 
 // MakeVerifyEndpoint ...
 func MakeVerifyEndpoint(svc service.Service) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*pba.VerifyRequest)
 		user, err := svc.Auth.Verify(req.Email, req.Password)
 		if err != nil {

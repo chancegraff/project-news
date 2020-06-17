@@ -12,7 +12,7 @@ import (
 
 // MakeDeregisterEndpoint ...
 func MakeDeregisterEndpoint(svc service.Service) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*pba.DeregisterRequest)
 		user, err := svc.Auth.Deregister(req.UserID)
 		if err != nil {

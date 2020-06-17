@@ -12,7 +12,7 @@ import (
 
 // MakeUserEndpoint ...
 func MakeUserEndpoint(svc service.Service) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*pbr.UserRequest)
 		user, err := svc.Ranker.User(req.UserID)
 		if err != nil {
