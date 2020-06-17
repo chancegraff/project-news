@@ -11,11 +11,11 @@ const Article: React.FC<{
   article,
   user,
 }) => {
-    const articleVotes = useMemo(() => localStorage.getItem(article.ID.toString()) || "[]", [article]);
+    const articleVotes = useMemo(() => localStorage.getItem(article.id.toString()) || "[]", [article]);
     const [votes, setVotes] = useState<Array<string>>(JSON.parse(articleVotes));
     const source = useMemo(() => {
-      if(article.URL) {
-        const url = new URL(article.URL);
+      if(article.url) {
+        const url = new URL(article.url);
         return url.hostname;
       }
     }, [
@@ -26,7 +26,7 @@ const Article: React.FC<{
       publishedDate,
       publishedTime,
     } = useMemo(() => {
-      const publishedAt = new Date(article.PublishedAt)
+      const publishedAt = new Date(article.publishedAt)
       return {
         publishedDate: publishedAt.toLocaleDateString(),
         publishedTime: publishedAt.toLocaleTimeString(),
@@ -42,7 +42,7 @@ const Article: React.FC<{
     ]);
 
     const hasVoted = useMemo<boolean | undefined>(() => (
-      user && votes.includes(user.ID.toString())
+      user && votes.includes(user.id.toString())
     ), [
       votes,
       user,
@@ -53,15 +53,15 @@ const Article: React.FC<{
         const options = {
           method: "POST",
           body: JSON.stringify({
-            article: `${article.ID}`,
-            user: `${user.ID}`,
+            article: `${article.id}`,
+            user: `${user.id}`,
           }),
         }
 
         fetch(voteURL, options)
           .then((res) => res.json())
           .then((users) => {
-            localStorage.setItem(article.ID.toString(), JSON.stringify(users || []))
+            localStorage.setItem(article.id.toString(), JSON.stringify(users || []))
             setVotes(users || []);
           });
       }
@@ -78,9 +78,9 @@ const Article: React.FC<{
           handleVote={handleVote}
           canVote={canVote}
         />
-        <img className={styles.ArticleImage} src={article.Thumbnail} />
+        <img className={styles.ArticleImage} src={article.thumbnail} />
         <div className={styles.ArticleText}>
-          <a className={styles.ArticleLink} href={article.URL} rel="noopener noreferrer" target="_blank">{article.Title}</a>
+          <a className={styles.ArticleLink} href={article.url} rel="noopener noreferrer" target="_blank">{article.title}</a>
           <div className={styles.ArticleSmallText}>
             <a className={styles.ArticleSource} href={`https://${source}`} rel="noopener noreferrer" target="_blank">{source}</a>
             <span className={styles.ArticlePublishedDate}>{publishedDate}</span>

@@ -56,7 +56,7 @@ const setLocalAuth = (hash: IAuth) => {
   }
 };
 
-const articlesURL = "http://localhost:8000/api/v1/articles";
+const articlesURL = "http://localhost:8000/api/v1/collector/all";
 const generateURL = "http://localhost:8000/api/v1/token/generate";
 
 const identifiers: IIdentifiers = {
@@ -121,13 +121,17 @@ const App = () => {
       if(auth && auth.hash && !articles.length) {
         console.log('Effecting')
         const rsp = await fetch(articlesURL, {
+          method: "POST",
           headers: {
             "X-Token-Auth": `Bearer ${auth.hash}`
-          }
+          },
+          body: JSON.stringify({
+            offset: 0,
+          }),
         });
         const js = await rsp.json();
 
-        setArticles(js);
+        setArticles(js.articles);
       }
     };
 
@@ -146,7 +150,7 @@ const App = () => {
     <div className={styles.App}>
       <div className={styles.ArticleList}>
         {articles.map((article) => (
-          <Article key={article.ID} article={article} user={user} />
+          <Article key={article.id} article={article} user={user} />
         ))}
       </div>
       <div className={styles.AccountBubble}>
