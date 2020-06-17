@@ -1,7 +1,6 @@
 package collector
 
 import (
-	"log"
 	web "net/http"
 
 	"github.com/chancegraff/project-news/pkg/gateway/endpoints"
@@ -32,7 +31,6 @@ func (e Endpoints) Route(mxr *mux.Router) {
 
 // All ...
 func (e Endpoints) All(writer web.ResponseWriter, request *web.Request) {
-	log.Println("HTTP 1")
 	e.AllEndpoint.ServeHTTP(writer, request)
 }
 

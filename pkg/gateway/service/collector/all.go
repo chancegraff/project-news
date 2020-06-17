@@ -2,7 +2,6 @@ package collector
 
 import (
 	"fmt"
-	"log"
 	"sort"
 	"strconv"
 
@@ -16,19 +15,16 @@ func (s *service) All(offset int) ([]*pbc.Article, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Println("Service all 1")
 	// Pick article IDs
 	var articleIDs []string
 	for _, art := range articles {
 		articleIDs = append(articleIDs, fmt.Sprint(art.Id))
 	}
-	log.Println("Service all 2")
 	// Call ranker service
 	articleVotes, err := s.Proxy.Ranker.Articles(articleIDs)
 	if err != nil {
 		return nil, err
 	}
-	log.Println("Service all 3")
 	// Put articles into order
 	sort.Slice(articles, func(i, j int) bool {
 		iRank, jRank := "0", "0"
@@ -47,7 +43,6 @@ func (s *service) All(offset int) ([]*pbc.Article, error) {
 
 		return iRankInt > jRankInt
 	})
-	log.Println("Service all 4")
 	// Return response
 	return articles, nil
 }
