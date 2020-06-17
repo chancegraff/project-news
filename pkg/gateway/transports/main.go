@@ -1,3 +1,0 @@
-package transports
-
-func main() {}

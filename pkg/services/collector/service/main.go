@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/chancegraff/project-news/internal/models"
@@ -27,8 +28,9 @@ type service struct {
 
 // NewService instantiates the service with a connection to the database
 func NewService(ctx context.Context, manager *manager.Manager) Service {
-	rankerAddress := utils.GetRankerAddress()
-	rankerConnection, err := grpc.DialContext(ctx, rankerAddress,
+	port := utils.GetRankerPort()
+	address := fmt.Sprint(":", port)
+	rankerConnection, err := grpc.DialContext(ctx, address,
 		grpc.WithInsecure(),
 		grpc.WithTimeout(time.Second*3))
 	if err != nil {

@@ -24,3 +24,33 @@ func GetRankerPort() int {
 	}
 	return rankerPort
 }
+
+// GetAuthPort will return the ranker port value
+func GetAuthPort() int {
+	authPortString := os.Getenv("AUTH_PORT")
+	authPort, err := strconv.Atoi(authPortString)
+	if err != nil {
+		authPort = 7997
+	}
+	return authPort
+}
+
+// GetTokenPort will return the ranker port value
+func GetTokenPort() int {
+	tokenPortString := os.Getenv("TOKEN_PORT")
+	tokenPort, err := strconv.Atoi(tokenPortString)
+	if err != nil {
+		tokenPort = 7996
+	}
+	return tokenPort
+}
+
+// GetGatewayPort will return the gateway port value
+func GetGatewayPort() int {
+	gatewayPortString := os.Getenv("GATEWAY_PORT")
+	gatewayPort, err := strconv.Atoi(gatewayPortString)
+	if err != nil {
+		gatewayPort = 8000
+	}
+	return gatewayPort
+}
