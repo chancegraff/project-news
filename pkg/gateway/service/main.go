@@ -1,8 +1,6 @@
 package service
 
 import (
-	"context"
-
 	"github.com/chancegraff/project-news/pkg/gateway/proxy"
 	"github.com/chancegraff/project-news/pkg/gateway/service/auth"
 	"github.com/chancegraff/project-news/pkg/gateway/service/collector"
@@ -19,14 +17,12 @@ type Service struct {
 }
 
 // NewService instantiates the service with a connection to the database
-func NewService(ctx context.Context) Service {
-	prx := proxy.NewProxy()
-	prx.Start(ctx)
+func NewService(prx *proxy.Proxy) Service {
 	return Service{
-		Auth:      auth.NewService(&prx),
-		Collector: collector.NewService(&prx),
-		Ranker:    ranker.NewService(&prx),
-		Token:     token.NewService(&prx),
+		Auth:      auth.NewService(prx),
+		Collector: collector.NewService(prx),
+		Ranker:    ranker.NewService(prx),
+		Token:     token.NewService(prx),
 	}
 }
 

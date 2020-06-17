@@ -18,29 +18,39 @@ type Proxy struct {
 }
 
 // NewProxy will create proxy connections to the various services
-func NewProxy() Proxy {
-	return Proxy{
+func NewProxy(ctx context.Context) (*Proxy, error) {
+	prx := Proxy{
 		Auth:      auth.NewProxy(),
 		Collector: collector.NewProxy(),
 		Ranker:    ranker.NewProxy(),
 		Token:     token.NewProxy(),
 	}
+	err := prx.Start(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &prx, nil
 }
 
 // Start will connect all of the proxy services or panic
-func (p Proxy) Start(ctx context.Context) {
-	MustStart(ctx, p.Auth.Start)
-	MustStart(ctx, p.Collector.Start)
-	MustStart(ctx, p.Ranker.Start)
-	MustStart(ctx, p.Token.Start)
-}
-
-// MustStart will call the function or panic if it errors
-func MustStart(ctx context.Context, start func(ctx context.Context) error) {
-	err := start(ctx)
+func (p Proxy) Start(ctx context.Context) error {
+	err := p.Auth.Start(ctx)
 	if err != nil {
-		panic(err)
+		return err
 	}
+	err = p.Collector.Start(ctx)
+	if err != nil {
+		return err
+	}
+	err = p.Ranker.Start(ctx)
+	if err != nil {
+		return err
+	}
+	err = p.Token.Start(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // Stop will disconnect all of the proxy services

@@ -41,6 +41,7 @@ func Dial(ctx context.Context, address string) (*grpc.ClientConn, error) {
 		address,
 		grpc.WithInsecure(),
 		grpc.WithTimeout(time.Second*3),
+		grpc.WithBlock(),
 	)
 	if err != nil {
 		return nil, err

@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"log"
 
 	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/gateway/endpoints"
 	"github.com/chancegraff/project-news/pkg/gateway/middlewares"
+	"github.com/chancegraff/project-news/pkg/gateway/proxy"
 	"github.com/chancegraff/project-news/pkg/gateway/server"
 	"github.com/chancegraff/project-news/pkg/gateway/service"
 	_ "github.com/joho/godotenv/autoload" // Autoload environment variables from file
@@ -20,8 +22,15 @@ func main() {
 	lgr := utils.Logger("gateway")
 	mdl := middlewares.NewMiddlewares(lgr)
 
+	// Create service proxies
+	prx, err := proxy.NewProxy(ctx)
+	if err != nil {
+		log.Fatal("Failed to create proxies", err)
+		return
+	}
+
 	// Create service and bind to middleware
-	svc := service.NewService(ctx)
+	svc := service.NewService(prx)
 	svc = mdl.BindService(svc)
 
 	// Create endpoints and bind to middleware
