@@ -56,8 +56,13 @@ const setLocalAuth = (hash: IAuth) => {
   }
 };
 
-const articlesURL = "http://localhost:8000/api/v1/collector/all";
-const generateURL = "http://localhost:8000/api/v1/token/generate";
+const protocol = "http";
+const apiURL = process.env.REACT_APP_API_URL;
+const apiPort = process.env.REACT_APP_API_PORT;
+const articlesPath = "api/v1/collector/all";
+const articlesURL = `${protocol}://${apiURL}:${apiPort}/${articlesPath}`;
+const generatePath = "api/v1/token/generate";
+const generateURL = `${protocol}://${apiURL}:${apiPort}/${generatePath}`;
 
 const identifiers: IIdentifiers = {
   software: navigator.platform,
