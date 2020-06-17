@@ -27,3 +27,12 @@ func Logger(serviceName string) log.Logger {
 	lgr = log.WithPrefix(lgr, "service", serviceName)
 	return lgr
 }
+
+// Getwd ...
+func Getwd() string {
+	wd := os.Getenv("WORKING_DIRECTORY")
+	if wd == "" {
+		wd = "/Users/chancegraff/Repositories/project-news"
+	}
+	return wd
+}

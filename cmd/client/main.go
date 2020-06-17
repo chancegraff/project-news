@@ -2,11 +2,11 @@ package main
 
 import (
 	"github.com/chancegraff/project-news/internal/utils"
-	"github.com/chancegraff/project-news/pkg/client"
+	"github.com/chancegraff/project-news/pkg/gateway"
 )
 
 func main() {
 	done := utils.GetDoneChannel()
-	go client.Run()
+	go gateway.Run()
 	<-*done
 }

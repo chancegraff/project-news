@@ -47,20 +47,10 @@ func GetTokenPort() int {
 
 // GetGatewayPort will return the gateway port value
 func GetGatewayPort() int {
-	gatewayPortString := os.Getenv("GATEWAY_PORT")
+	gatewayPortString := os.Getenv("PORT")
 	gatewayPort, err := strconv.Atoi(gatewayPortString)
 	if err != nil {
 		gatewayPort = 8000
 	}
 	return gatewayPort
-}
-
-// GetClientPort will return the gateway port value
-func GetClientPort() int {
-	clientPortString := os.Getenv("PORT")
-	clientPort, err := strconv.Atoi(clientPortString)
-	if err != nil {
-		clientPort = 8080
-	}
-	return clientPort
 }

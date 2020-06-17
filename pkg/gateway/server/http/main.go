@@ -1,6 +1,10 @@
 package http
 
 import (
+	"net/http"
+	"path/filepath"
+
+	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/gateway/endpoints"
 	"github.com/chancegraff/project-news/pkg/gateway/server/http/auth"
 	"github.com/chancegraff/project-news/pkg/gateway/server/http/collector"
@@ -31,10 +35,19 @@ func NewServerEndpoints(endpoints endpoints.Endpoints) ServerEndpoints {
 // Route will create a muxed server
 func (e *ServerEndpoints) Route() *mux.Router {
 	mxr := mux.NewRouter()
+
+	// Create api
 	api := mxr.PathPrefix("/api/v1").Subrouter()
 	e.AuthEndpoints.Route(api)
 	e.CollectorEndpoints.Route(api)
 	e.RankerEndpoints.Route(api)
 	e.TokenEndpoints.Route(api)
+
+	// Create root
+	wd := utils.Getwd()
+	fp := filepath.Join(wd, "web", "build")
+	fs := http.FileServer(http.Dir(fp))
+	mxr.PathPrefix("/").Handler(http.StripPrefix("/", fs))
+
 	return mxr
 }
