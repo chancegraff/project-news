@@ -57,7 +57,7 @@ func GetGatewayPort() int {
 
 // GetClientPort will return the gateway port value
 func GetClientPort() int {
-	clientPortString := os.Getenv("CLIENT_PORT")
+	clientPortString := os.Getenv("PORT")
 	clientPort, err := strconv.Atoi(clientPortString)
 	if err != nil {
 		clientPort = 8080
