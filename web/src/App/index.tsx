@@ -56,7 +56,7 @@ const setLocalAuth = (hash: IAuth) => {
   }
 };
 
-const articlesURL = "/api/v1/collector/all";
+const articlesURL = "/api/v1/token/generate";
 const generateURL = "/api/v1/token/generate";
 
 const identifiers: IIdentifiers = {
@@ -119,8 +119,6 @@ const App = () => {
   useEffect(() => {
     const fn = async () => {
       if(auth && auth.hash && !articles.length) {
-        console.log('Effecting')
-        debugger;
         const articlesOption = {
           method: "POST",
           headers: {
@@ -131,7 +129,6 @@ const App = () => {
           }),
         };
         const rsp = await fetch(articlesURL, articlesOption);
-        debugger;
         const js = await rsp.json();
 
         setArticles(js.articles);
