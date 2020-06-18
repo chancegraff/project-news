@@ -120,15 +120,18 @@ const App = () => {
     const fn = async () => {
       if(auth && auth.hash && !articles.length) {
         console.log('Effecting')
-        const rsp = await fetch(articlesURL, {
+        debugger;
+        const articlesOption = {
           method: "POST",
-          // headers: {
-          //   "X-Token-Auth": `Bearer ${auth.hash}`
-          // },
+          headers: {
+            "X-Token-Auth": `Bearer ${auth.hash}`
+          },
           body: JSON.stringify({
             offset: 0,
           }),
-        });
+        };
+        const rsp = await fetch(articlesURL, articlesOption);
+        debugger;
         const js = await rsp.json();
 
         setArticles(js.articles);

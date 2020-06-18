@@ -2,9 +2,14 @@ package utils
 
 import "github.com/gorilla/handlers"
 
+// CORSOrigin ...
+var CORSOrigin = handlers.AllowedOrigins(
+	[]string{"*"},
+)
+
 // CORSHeaders ...
 var CORSHeaders = handlers.AllowedHeaders(
-	[]string{"X-Requested-With", "X-Token-Auth", "Content-Type", "Authorization"},
+	[]string{"*"},
 )
 
 // CORSMethods ...
@@ -13,4 +18,4 @@ var CORSMethods = handlers.AllowedMethods(
 )
 
 // CORSPolicy ...
-var CORSPolicy = handlers.CORS(CORSMethods, CORSHeaders)
+var CORSPolicy = handlers.CORS(CORSMethods, CORSHeaders, CORSOrigin)
