@@ -2,7 +2,6 @@ package ranker
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	pbr "github.com/chancegraff/project-news/api/ranker"
@@ -28,7 +27,7 @@ type proxy struct {
 // NewProxy ...
 func NewProxy() Proxy {
 	port := utils.GetRankerPort()
-	address := fmt.Sprint(":", port)
+	address := utils.GetAPIAddress(port)
 	return &proxy{
 		Address: address,
 	}

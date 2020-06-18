@@ -2,7 +2,6 @@ package token
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	pbt "github.com/chancegraff/project-news/api/token"
@@ -27,7 +26,7 @@ type proxy struct {
 // NewProxy ...
 func NewProxy() Proxy {
 	port := utils.GetTokenPort()
-	address := fmt.Sprint(":", port)
+	address := utils.GetAPIAddress(port)
 	return &proxy{
 		Address: address,
 	}

@@ -2,7 +2,6 @@ package collector
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	pbc "github.com/chancegraff/project-news/api/collector"
@@ -27,7 +26,7 @@ type proxy struct {
 // NewProxy ...
 func NewProxy() Proxy {
 	port := utils.GetCollectorPort()
-	address := fmt.Sprint(":", port)
+	address := utils.GetAPIAddress(port)
 	return &proxy{
 		Address: address,
 	}

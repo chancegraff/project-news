@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	web "net/http"
+	"strconv"
 	"time"
 
 	"github.com/chancegraff/project-news/internal/utils"
@@ -41,7 +42,7 @@ func (h *HTTP) Stop(parent context.Context) error {
 func NewServer(e endpoints.Endpoints, lgr log.Logger) HTTP {
 	// Create the address
 	port := utils.GetGatewayPort()
-	address := fmt.Sprint(":", port)
+	address := fmt.Sprintf(":%s", strconv.Itoa(port))
 
 	// Build the endpoints
 	endpoints := http.NewServerEndpoints(e)

@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
+	"strconv"
 	"time"
 
 	"github.com/go-kit/kit/log"
@@ -35,4 +37,14 @@ func Getwd() string {
 		wd = "/Users/chancegraff/Repositories/project-news"
 	}
 	return wd
+}
+
+// GetAPIAddress ...
+func GetAPIAddress(p int) string {
+	port := strconv.Itoa(p)
+	host := os.Getenv("API_HOST")
+	if host == "" {
+		host = "localhost"
+	}
+	return fmt.Sprintf("%s:%s", host, port)
 }

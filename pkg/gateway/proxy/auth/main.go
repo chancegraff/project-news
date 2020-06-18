@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	pba "github.com/chancegraff/project-news/api/auth"
@@ -29,7 +28,7 @@ type proxy struct {
 // NewProxy ...
 func NewProxy() Proxy {
 	port := utils.GetAuthPort()
-	address := fmt.Sprint(":", port)
+	address := utils.GetAPIAddress(port)
 	return &proxy{
 		Address: address,
 	}
