@@ -23,18 +23,18 @@ func NewEndpoints(endpoints endpoints.Endpoints) Endpoints {
 }
 
 // Route ...
-func (e Endpoints) Route(mxr *mux.Router) {
+func (e *Endpoints) Route(mxr *mux.Router) {
 	route := mxr.PathPrefix("/collector").Subrouter()
 	route.HandleFunc("/all", e.All).Methods("POST", "OPTIONS")
 	route.HandleFunc("/get", e.Get).Methods("POST", "OPTIONS")
 }
 
 // All ...
-func (e Endpoints) All(writer web.ResponseWriter, request *web.Request) {
+func (e *Endpoints) All(writer web.ResponseWriter, request *web.Request) {
 	e.AllEndpoint.ServeHTTP(writer, request)
 }
 
 // Get ...
-func (e Endpoints) Get(writer web.ResponseWriter, request *web.Request) {
+func (e *Endpoints) Get(writer web.ResponseWriter, request *web.Request) {
 	e.GetEndpoint.ServeHTTP(writer, request)
 }

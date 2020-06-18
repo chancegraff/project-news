@@ -47,7 +47,7 @@ func (e *ServerEndpoints) Route() *mux.Router {
 	wd := utils.Getwd()
 	fp := filepath.Join(wd, "web", "build")
 	fs := http.FileServer(http.Dir(fp))
-	mxr.PathPrefix("/").Handler(http.StripPrefix("/", fs))
+	mxr.PathPrefix("/").Handler(http.StripPrefix("/", utils.CORSPolicy(fs)))
 
 	// TODO Setup webpack for golang if it's dev
 
