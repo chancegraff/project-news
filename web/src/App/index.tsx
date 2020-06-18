@@ -56,7 +56,7 @@ const setLocalAuth = (hash: IAuth) => {
   }
 };
 
-const articlesURL = "/api/v1/token/generate";
+const articlesURL = "/api/v1/collector/all";
 const generateURL = "/api/v1/token/generate";
 
 const identifiers: IIdentifiers = {
@@ -128,10 +128,15 @@ const App = () => {
             offset: 0,
           }),
         };
-        const rsp = await fetch(articlesURL, articlesOption);
-        const js = await rsp.json();
 
-        setArticles(js.articles);
+        try {
+          const rsp = await fetch(articlesURL, articlesOption);
+          const js = await rsp.json();
+
+          setArticles(js.articles);
+        } catch(e) {
+          console.log(e, articlesURL, articlesOption);
+        }
       }
     };
 
