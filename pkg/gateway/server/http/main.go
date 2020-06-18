@@ -43,11 +43,22 @@ func (e *ServerEndpoints) Route() *mux.Router {
 	e.RankerEndpoints.Route(api)
 	e.TokenEndpoints.Route(api)
 
-	// Create root
+	// Create file server at root
 	wd := utils.Getwd()
 	fp := filepath.Join(wd, "web", "build")
 	fs := http.FileServer(http.Dir(fp))
 	mxr.PathPrefix("/").Handler(http.StripPrefix("/", fs))
+
+	// TODO Setup webpack for golang if it's dev
+
+	// // Create root for servers
+	// env := utils.GetEnvironment()
+	// if env != "dev" {
+	// 	wd := utils.Getwd()
+	// 	fp := filepath.Join(wd, "web", "build")
+	// 	fs := http.FileServer(http.Dir(fp))
+	// 	mxr.PathPrefix("/").Handler(http.StripPrefix("/", fs))
+	// }
 
 	return mxr
 }

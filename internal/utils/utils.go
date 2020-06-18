@@ -48,3 +48,12 @@ func GetAPIAddress(p int) string {
 	}
 	return fmt.Sprintf("%s:%s", host, port)
 }
+
+// GetEnvironment ...
+func GetEnvironment() string {
+	env := os.Getenv("ENVIRONMENT")
+	if env == "" {
+		env = "dev"
+	}
+	return env
+}
