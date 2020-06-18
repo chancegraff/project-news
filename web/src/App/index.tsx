@@ -104,7 +104,10 @@ const App = () => {
 
         const js = await fetch(generateURL, generateOptions)
           .then((rsp) => rsp.json())
-          .catch((error) => console.log(error))
+          .catch((error) => console.log(error, {
+            generateURL,
+            generateOptions,
+          }))
 
         // const rsp = await fetch(generateURL, generateOptions);
         // const js = await rsp.json();
@@ -133,14 +136,14 @@ const App = () => {
           }),
         };
 
-        try {
-          const rsp = await fetch(articlesURL, articlesOption);
-          const js = await rsp.json();
+        const js = await fetch(articlesURL, articlesOption)
+          .then((rsp) => rsp.json())
+          .catch((error) => console.log(error, {
+            articlesURL,
+            articlesOption,
+          }));
 
-          setArticles(js.articles);
-        } catch(e) {
-          console.log(e, articlesURL, articlesOption);
-        }
+        setArticles(js.articles);
       }
     };
 
