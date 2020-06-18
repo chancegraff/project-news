@@ -102,8 +102,12 @@ const App = () => {
           }),
         };
 
-        const rsp = await fetch(generateURL, generateOptions);
-        const js = await rsp.json();
+        const js = await fetch(generateURL, generateOptions)
+          .then((rsp) => rsp.json())
+          .catch((error) => console.log(error))
+
+        // const rsp = await fetch(generateURL, generateOptions);
+        // const js = await rsp.json();
 
         ath.hash = js.hash;
 
