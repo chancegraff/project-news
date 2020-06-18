@@ -25,7 +25,7 @@ func NewEndpoints(endpoints endpoints.Endpoints) Endpoints {
 
 // Route ...
 func (e *Endpoints) Route(mxr *mux.Router) {
-	route := mxr.PathPrefix("/collector").Subrouter()
+	route := mxr.PathPrefix("/collecter").Subrouter()
 	route.HandleFunc("/all", e.All).Methods("POST", "OPTIONS")
 	route.HandleFunc("/get", e.Get).Methods("POST", "OPTIONS")
 }

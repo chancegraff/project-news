@@ -56,7 +56,7 @@ const setLocalAuth = (hash: IAuth) => {
   }
 };
 
-const articlesURL = "/api/v1/collector/all";
+const articlesURL = "/api/v1/collecter/all";
 const generateURL = "/api/v1/token/generate";
 
 const identifiers: IIdentifiers = {
