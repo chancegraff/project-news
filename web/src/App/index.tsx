@@ -105,7 +105,7 @@ const App = () => {
         const rsp = await fetch(generateURL, generateOptions);
         const js = await rsp.json();
 
-        ath.hash = js;
+        ath.hash = js.hash;
 
         setStateAuth(ath);
         setLocalAuth(ath);

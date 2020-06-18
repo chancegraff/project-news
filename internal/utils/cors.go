@@ -9,7 +9,7 @@ var CORSOrigin = handlers.AllowedOrigins(
 
 // CORSHeaders ...
 var CORSHeaders = handlers.AllowedHeaders(
-	[]string{"*"},
+	[]string{"X-Requested-With", "X-Token-Auth", "Content-Type", "Authorization"},
 )
 
 // CORSMethods ...
