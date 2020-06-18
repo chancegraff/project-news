@@ -122,9 +122,9 @@ const App = () => {
         console.log('Effecting')
         const rsp = await fetch(articlesURL, {
           method: "POST",
-          headers: {
-            "X-Token-Auth": `Bearer ${auth.hash}`
-          },
+          // headers: {
+          //   "X-Token-Auth": `Bearer ${auth.hash}`
+          // },
           body: JSON.stringify({
             offset: 0,
           }),
