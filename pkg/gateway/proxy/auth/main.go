@@ -40,7 +40,7 @@ func Dial(ctx context.Context, address string) (*grpc.ClientConn, error) {
 		ctx,
 		address,
 		grpc.WithInsecure(),
-		grpc.WithTimeout(time.Second*3),
+		grpc.WithTimeout(time.Second*30),
 		grpc.WithBlock(),
 	)
 	if err != nil {
