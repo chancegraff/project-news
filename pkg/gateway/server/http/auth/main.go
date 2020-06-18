@@ -3,6 +3,7 @@ package auth
 import (
 	web "net/http"
 
+	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/gateway/endpoints"
 	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
@@ -37,20 +38,44 @@ func (e *Endpoints) Route(mxr *mux.Router) {
 
 // Deregister ...
 func (e *Endpoints) Deregister(writer web.ResponseWriter, request *web.Request) {
+	utils.SetCORSHeaders(writer)
+
+	if request.Method == "OPTIONS" {
+		return
+	}
+
 	e.DeregisterEndpoint.ServeHTTP(writer, request)
 }
 
 // Register ...
 func (e *Endpoints) Register(writer web.ResponseWriter, request *web.Request) {
+	utils.SetCORSHeaders(writer)
+
+	if request.Method == "OPTIONS" {
+		return
+	}
+
 	e.RegisterEndpoint.ServeHTTP(writer, request)
 }
 
 // User ...
 func (e *Endpoints) User(writer web.ResponseWriter, request *web.Request) {
+	utils.SetCORSHeaders(writer)
+
+	if request.Method == "OPTIONS" {
+		return
+	}
+
 	e.UserEndpoint.ServeHTTP(writer, request)
 }
 
 // Verify ...
 func (e *Endpoints) Verify(writer web.ResponseWriter, request *web.Request) {
+	utils.SetCORSHeaders(writer)
+
+	if request.Method == "OPTIONS" {
+		return
+	}
+
 	e.VerifyEndpoint.ServeHTTP(writer, request)
 }

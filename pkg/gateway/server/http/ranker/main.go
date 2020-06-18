@@ -3,6 +3,7 @@ package ranker
 import (
 	web "net/http"
 
+	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/gateway/endpoints"
 	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
@@ -34,15 +35,33 @@ func (e *Endpoints) Route(mxr *mux.Router) {
 
 // Articles ...
 func (e *Endpoints) Articles(writer web.ResponseWriter, request *web.Request) {
+	utils.SetCORSHeaders(writer)
+
+	if request.Method == "OPTIONS" {
+		return
+	}
+
 	e.ArticlesEndpoint.ServeHTTP(writer, request)
 }
 
 // User ...
 func (e *Endpoints) User(writer web.ResponseWriter, request *web.Request) {
+	utils.SetCORSHeaders(writer)
+
+	if request.Method == "OPTIONS" {
+		return
+	}
+
 	e.UserEndpoint.ServeHTTP(writer, request)
 }
 
 // Vote ...
 func (e *Endpoints) Vote(writer web.ResponseWriter, request *web.Request) {
+	utils.SetCORSHeaders(writer)
+
+	if request.Method == "OPTIONS" {
+		return
+	}
+
 	e.VoteEndpoint.ServeHTTP(writer, request)
 }

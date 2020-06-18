@@ -3,6 +3,7 @@ package collector
 import (
 	web "net/http"
 
+	"github.com/chancegraff/project-news/internal/utils"
 	"github.com/chancegraff/project-news/pkg/gateway/endpoints"
 	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
@@ -31,10 +32,22 @@ func (e *Endpoints) Route(mxr *mux.Router) {
 
 // All ...
 func (e *Endpoints) All(writer web.ResponseWriter, request *web.Request) {
+	utils.SetCORSHeaders(writer)
+
+	if request.Method == "OPTIONS" {
+		return
+	}
+
 	e.AllEndpoint.ServeHTTP(writer, request)
 }
 
 // Get ...
 func (e *Endpoints) Get(writer web.ResponseWriter, request *web.Request) {
+	utils.SetCORSHeaders(writer)
+
+	if request.Method == "OPTIONS" {
+		return
+	}
+
 	e.GetEndpoint.ServeHTTP(writer, request)
 }
