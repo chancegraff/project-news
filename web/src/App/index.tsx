@@ -143,7 +143,9 @@ const App = () => {
             articlesOption,
           }));
 
-        setArticles(js.articles);
+        if(js) {
+          setArticles(js.articles);
+        }
       }
     };
 
